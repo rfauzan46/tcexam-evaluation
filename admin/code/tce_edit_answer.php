@@ -793,6 +793,7 @@ if (K_ENABLE_ANSWER_EXPLANATION) {
         echo ' class="keyboardInput"';
     }
 
+    $answer_explanation = $answer_explanation ?? '';
     echo '>' . htmlspecialchars($answer_explanation, ENT_NOQUOTES, $l['a_meta_charset']) . '</textarea>' . K_NEWLINE;
     echo '<br />' . K_NEWLINE;
     echo tcecodeEditorTagButtons('form_answereditor', 'answer_explanation');

@@ -176,6 +176,14 @@ $menu['tce_menu_modules.php']['sub'] = [
         'key' => '',
         'enabled' => true,
     ],
+    'quizai_generate_question.php' => [
+        'link' => 'quizai_generate_question.php',
+        'title' => 'Generate Question with AI',
+        'name' => 'Generate Question with AI',
+        'level' => K_AUTH_ADMIN_SSLCERT,
+        'key' => '',
+        'enabled' => true,
+    ],
     'tce_edit_question.php' => [
         'link' => 'tce_edit_question.php',
         'title' => $l['t_questions_editor'],

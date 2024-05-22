@@ -1,81 +1,335 @@
+<?php
+
+// Include the configuration file
+require_once('../config/tce_config.php');
+
+// Define the required page level (assuming K_AUTH_ADMIN_IMPORT is a constant)
+$pagelevel = K_AUTH_ADMIN_IMPORT;
+
+// Include the authorization file
+require_once('../../shared/code/tce_authorization.php');
+
+// Set the page title
+$thispage_title = 'Generate Question from PDF';
+
+// Include necessary files
+require_once('../code/tce_page_header.php');
+require_once('../../shared/code/tce_functions_form.php');
+require_once('../../shared/code/tce_functions_tcecode.php');
+require_once('../../shared/code/tce_functions_auth_sql.php');
+?>
+
+<?php
+    // set default values
+    $subject_module_id = isset($_REQUEST['subject_module_id']) ? (int) $_REQUEST['subject_module_id'] : 0;
+
+    $question_id = isset($_REQUEST['question_id']) ? (int) $_REQUEST['question_id'] : 0;
+
+    if (! isset($_REQUEST['question_type']) || empty($_REQUEST['question_type'])) {
+        $question_type = 1;
+    } else {
+        $question_type = (int) $_REQUEST['question_type'];
+    }
+
+    $question_difficulty = isset($_REQUEST['question_difficulty']) ? (int) $_REQUEST['question_difficulty'] : 1;
+
+    if (! isset($_REQUEST['question_enabled']) || empty($_REQUEST['question_enabled'])) {
+        $question_enabled = false;
+    } else {
+        $question_enabled = F_getBoolean($_REQUEST['question_enabled']);
+    }
+
+    if (isset($_REQUEST['changemodule']) && $_REQUEST['changemodule'] > 0) {
+        $changemodule = 1;
+    } elseif (isset($_REQUEST['selectmodule'])) {
+        $changemodule = 1;
+    } else {
+        $changemodule = 0;
+    }
+
+    if (isset($_REQUEST['changecategory']) && $_REQUEST['changecategory'] > 0) {
+        $changecategory = 1;
+    } elseif (isset($_REQUEST['selectcategory'])) {
+        $changecategory = 1;
+    } else {
+        $changecategory = 0;
+    }
+
+    $subject_id = isset($_REQUEST['subject_id']) ? (int) $_REQUEST['subject_id'] : 0;
+
+    $question_subject_id = isset($_REQUEST['question_subject_id']) ? (int) $_REQUEST['question_subject_id'] : 0;
+
+    if (! isset($_REQUEST['max_position']) || empty($_REQUEST['max_position'])) {
+        $max_position = 0;
+    } else {
+        $max_position = (int) $_REQUEST['max_position'];
+    }
+
+    if (! isset($_REQUEST['question_position']) || empty($_REQUEST['question_position'])) {
+        $question_position = 0;
+    } else {
+        $question_position = (int) $_REQUEST['question_position'];
+    }
+
+    if (! isset($_REQUEST['question_timer']) || empty($_REQUEST['question_timer'])) {
+        $question_timer = 0;
+    } else {
+        $question_timer = (int) $_REQUEST['question_timer'];
+    }
+
+    if (! isset($_REQUEST['question_fullscreen']) || empty($_REQUEST['question_fullscreen'])) {
+        $question_fullscreen = false;
+    } else {
+        $question_fullscreen = F_getBoolean($_REQUEST['question_fullscreen']);
+    }
+
+    if (! isset($_REQUEST['question_inline_answers']) || empty($_REQUEST['question_inline_answers'])) {
+        $question_inline_answers = false;
+    } else {
+        $question_inline_answers = F_getBoolean($_REQUEST['question_inline_answers']);
+    }
+
+    if (! isset($_REQUEST['question_auto_next']) || empty($_REQUEST['question_auto_next'])) {
+        $question_auto_next = false;
+    } else {
+        $question_auto_next = F_getBoolean($_REQUEST['question_auto_next']);
+    }
+
+    if (isset($_REQUEST['question_description'])) {
+        $question_description = utrim($_REQUEST['question_description']);
+        if (function_exists('normalizer_normalize')) {
+            // normalize UTF-8 string based on settings
+            $question_description = F_utf8_normalizer($question_description, K_UTF8_NORMALIZATION_MODE);
+        }
+    }
+
+    $question_explanation = isset($_REQUEST['question_explanation']) ? utrim($_REQUEST['question_explanation']) : '';
+
+    $qtype = ['S', 'M', 'T', 'O']; // question types
+
+    // comma separated list of required fields
+    $_REQUEST['ff_required'] = 'question_description';
+    $_REQUEST['ff_required_labels'] = htmlspecialchars($l['w_description'], ENT_COMPAT, $l['a_meta_charset']);
+
+    // check user's authorization
+    if ($question_id > 0) {
+        $sql = 'SELECT subject_module_id, question_subject_id
+            FROM ' . K_TABLE_SUBJECTS . ', ' . K_TABLE_QUESTIONS . '
+            WHERE subject_id=question_subject_id
+                AND question_id=' . $question_id . '
+            LIMIT 1';
+        if ($r = F_db_query($sql, $db)) {
+            if ($m = F_db_fetch_array($r)) {
+                $subject_module_id = (int) $m['subject_module_id'];
+                $question_subject_id = (int) $m['question_subject_id'];
+                // check user's authorization for parent module
+                if (! F_isAuthorizedUser(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id') && ! F_isAuthorizedUser(K_TABLE_SUBJECTS, 'subject_id', $question_subject_id, 'subject_user_id')) {
+                    F_print_error('ERROR', $l['m_authorization_denied'], true);
+                }
+            }
+        } else {
+            F_display_db_error();
+        }
+    }
+?>
+
+<?php
+        // select default module/subject (if not specified)
+    if ($subject_module_id <= 0) {
+        $sql = F_select_modules_sql() . ' LIMIT 1';
+        if ($r = F_db_query($sql, $db)) {
+            $subject_module_id = ($m = F_db_fetch_array($r)) ? $m['module_id'] : 0;
+        } else {
+            F_display_db_error();
+        }
+    }
+
+    // select subject
+    if ($changemodule > 0 || $question_subject_id <= 0) {
+        $sql = F_select_subjects_sql('subject_module_id=' . $subject_module_id . '') . ' LIMIT 1';
+        if ($r = F_db_query($sql, $db)) {
+            $question_subject_id = ($m = F_db_fetch_array($r)) ? $m['subject_id'] : 0;
+        } else {
+            F_display_db_error();
+        }
+    }
+?>
+
+<?php 
+$sql = F_select_modules_sql();
+$r = F_db_query($sql, $db);
+$m = F_db_fetch_array($r);
+$moduleName = htmlspecialchars($m['module_name'], ENT_NOQUOTES, $l['a_meta_charset']);
+?>
+
+<?php 
+$sql = F_select_subjects_sql();
+$r = F_db_query($sql, $db);
+$m = F_db_fetch_array($r);
+$subjectName = htmlspecialchars($m['subject_name'], ENT_NOQUOTES, $l['a_meta_charset']);
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File and Text Upload to API</title>
+    <title>Generate Question from PDF</title>
+    <style>
+        /* CSS to center the card and style the form */
+        body {
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background-color: #F6F6F6;
+            padding: 20px;
+            border: 1px solid #000000;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+    </style>
 </head>
 <body>
-    <h2>Upload File and Input Text to API</h2>
-    <form action="" method="post" enctype="multipart/form-data">
-        <label for="file">Upload File:</label>
-        <input type="file" name="file" id="file"><br><br>
-        <label for="text">Input Text:</label>
-        <input type="text" name="text" id="text"><br><br>
-        <label for="answer_type">Type:</label><br>
-        <input type="radio" name="answer_type" id="single_answer" value="single_answer">
-        <label for="single_answer">Single Answer</label><br>
-        <input type="radio" name="answer_type" id="multiple_answers" value="multiple_answers">
-        <label for="multiple_answers">Multiple Answers</label><br>
-        <input type="radio" name="answer_type" id="free_answer" value="free_answer">
-        <label for="free_answer">Free Answer</label><br>
-        <input type="radio" name="answer_type" id="ordering_answers" value="ordering_answers">
-        <label for="ordering_answers">Ordering Answers</label><br><br>
-        <input type="submit" name="submit" value="Submit">
-    </form>
+<div class="card">
+    <div class="card-body">
+        <form id="uploadForm" enctype="multipart/form-data" method="POST" action="quizai_generate_result.php">
+            <input type="hidden" name="form_action" id="form_action" value="generate">
+            <div class="mb-3">
+                <label for="subject_module_id" class="form-label">Module:</label>
+                <input type="hidden" name="changemodule" id="changemodule" value="" />
+                <select name="subject_module_id" id="subject_module_id" size="0" onchange="submitForm('change_module');" class="form-control">
+                    <?php
+                        $sql = F_select_modules_sql();
+                        if ($r = F_db_query($sql, $db)) {
+                            $countitem = 1;
+                            while ($m = F_db_fetch_array($r)) {
+                                echo '<option value="' . $m['module_id'] . '"';
+                                if ($m['module_id'] == $subject_module_id) {
+                                    echo ' selected="selected"';
+                                }
 
-    <?php
-    // Check if form is submitted
-    if (isset($_POST['submit'])) {
-        // API endpoint
-        $api_url = 'https://api.example.com/upload';
+                                echo '>' . $countitem . '. ';
+                                if (F_getBoolean($m['module_enabled'])) {
+                                    echo '+';
+                                } else {
+                                    echo '-';
+                                }
 
-        // Prepare data to be sent
-        $data = array();
+                                echo ' ' . htmlspecialchars($m['module_name'], ENT_NOQUOTES, $l['a_meta_charset']) . '&nbsp;</option>';
+                                ++$countitem;
+                            }
 
-        // Add file if uploaded
-        if (!empty($_FILES['file']['tmp_name'])) {
-            $data['file'] = new CURLFile($_FILES['file']['tmp_name'], $_FILES['file']['type'], $_FILES['file']['name']);
-        }
+                            if ($countitem == 1) {
+                                echo '<option value="0">&nbsp;</option>';
+                            }
+                        } else {
+                            F_display_db_error();
+                        }
+                    ?>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="question_subject_id" class="form-label">Subject:</label>
+                <input type="hidden" name="changecategory" id="changecategory" value="" />
+                <select name="question_subject_id" id="question_subject_id" size="0" onchange="submitForm('change_subject');" class="form-control">
+                    <?php
+                        $sql = F_select_subjects_sql('subject_module_id=' . $subject_module_id);
+                        if ($r = F_db_query($sql, $db)) { 
+                            $countitem = 1;
+                            while ($m = F_db_fetch_array($r)) {
+                                echo '<option value="' . $m['subject_id'] . '"';
+                                if ($m['subject_id'] == $question_subject_id) {
+                                    echo ' selected="selected"';
+                                }
 
-        // Add text if provided
-        if (!empty($_POST['text'])) {
-            $data['text'] = $_POST['text'];
-        }
+                                echo '>' . $countitem . '. ';
+                                if (F_getBoolean($m['subject_enabled'])) {
+                                    echo '+';
+                                } else {
+                                    echo '-';
+                                }
 
-        // Add answer type
-        if (!empty($_POST['answer_type'])) {
-            $data['answer_type'] = $_POST['answer_type'];
-        }
+                                echo ' ' . htmlspecialchars(F_remove_tcecode($m['subject_name']), ENT_NOQUOTES, $l['a_meta_charset']) . '</option>';
+                                ++$countitem;
+                            }
 
-        // Initialize cURL session
-        $ch = curl_init();
+                            if ($countitem == 1) {
+                                echo '<option value="0">&nbsp;</option>';
+                            }
+                        } else {
+                            F_display_db_error();
+                        }
+                    ?>
+                </select>
+            </div>
+            <hr>
+            <div class="mb-3">
+                <label for="file" class="form-label">Upload File:</label>
+                <input type="file" class="form-control" name="file" id="file">
+            </div>
+            <div class="mb-3">
+                <label for="answer_type" class="form-label">Type:</label><br>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer_type" id="single_answer" value="single_answer">
+                    <label class="form-check-label" for="single_answer">Single Answer</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer_type" id="multiple_answers" value="multiple_answers">
+                    <label class="form-check-label" for="multiple_answers">Multiple Answers</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer_type" id="free_answer" value="free_answer">
+                    <label class="form-check-label" for="free_answer">Free Answer</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer_type" id="ordering_answers" value="ordering_answers">
+                    <label class="form-check-label" for="ordering_answers">Ordering Answers</label>
+                </div>
+                <button id="showTextareaBtn">Add more context (optional)</button>
+                <div class="mb-3" id="textareaWrapper" style="display: none;">
+                    <label for="text" class="form-label">Input Text:</label>
+                    <textarea class="form-control" name="text" id="text" rows="5"></textarea>
+                </div>
+            </div>
+            <br/>
+            <button type="submit" id="submitBtn" style="padding: 5px 10px; font-size: 1.25em;">Generate!</button>
+        </form>
+    </div>
+</div>
 
-        // Set cURL options
-        curl_setopt($ch, CURLOPT_URL, $api_url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return response instead of outputting it
-
-        // Execute cURL request
-        $response = curl_exec($ch);
-
-        // Check for errors
-        if (curl_errno($ch)) {
-            echo 'Error: ' . curl_error($ch);
-        }
-
-        // Close cURL session
-        curl_close($ch);
-
-        // Process API response
-        if ($response) {
-            echo '<p>API Response:</p>';
-            echo '<pre>' . htmlspecialchars($response) . '</pre>';
+<script>
+    function submitForm(action) {
+        document.getElementById('form_action').value = action;
+        if (action === 'change_module' || action === 'change_subject') {
+            document.getElementById('uploadForm').action = ''; // No specific action for module/subject change
         } else {
-            echo '<p>No response from the API</p>';
+            document.getElementById('uploadForm').action = 'quizai_generate_result.php'; // Default action
         }
+        document.getElementById('uploadForm').submit();
     }
-    ?>
+
+    document.getElementById('showTextareaBtn').addEventListener('click', function(event) {
+        var textareaWrapper = document.getElementById('textareaWrapper');
+        var textarea = document.getElementById('text');
+
+        // Toggle visibility of textarea wrapper
+        if (textareaWrapper.style.display === 'none') {
+            textareaWrapper.style.display = 'block';
+            textarea.focus(); // Optionally focus on the textarea when shown
+        } else {
+            textareaWrapper.style.display = 'none';
+        }
+        event.preventDefault();
+    });
+</script>
 </body>
 </html>
+
+
+<?php
+    require_once('../code/tce_page_footer.php');
+?>

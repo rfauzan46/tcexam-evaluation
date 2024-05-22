@@ -712,6 +712,7 @@ if ($r = F_db_query($sql, $db)) {
 echo '</select>' . K_NEWLINE;
 echo '</span>' . K_NEWLINE;
 echo '</div>' . K_NEWLINE;
+// echo '<button onclick="openNewWindow()">Generate Question with AI</button>';
 
 echo getFormNoscriptSelect('selectrecord');
 
@@ -721,18 +722,18 @@ echo '<div class="row">' . K_NEWLINE;
 echo '<span class="label">' . K_NEWLINE;
 echo '<label for="question_description">' . $l['w_question'] . '</label>' . K_NEWLINE;
 echo '<br />' . K_NEWLINE;
-echo '<a href="#" title="' . $l['h_preview'] . '" class="xmlbutton" onclick="previewWindow=window.open(\'tce_preview_tcecode.php?tcexamcode=\'+encodeURIComponent(document.getElementById(\'form_questioneditor\').question_description.value),\'previewWindow\',\'dependent,height=500,width=500,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\'); return false;">' . $l['w_preview'] . '</a>' . K_NEWLINE;
+// echo '<a href="tce_preview_tcecode.php?tcexamcode=' . urlencode($_POST['question_description']) . '" title="' . $l['h_preview'] . '" class="xmlbutton">' . $l['w_preview'] . '</a>' . K_NEWLINE;
 echo '<br />' . K_NEWLINE;
 echo '<br />' . K_NEWLINE;
 
-echo '<button onclick="openNewWindow()">Generate Question with AI</button>';
-echo '<script>';
-echo 'function openNewWindow() {';
-echo '    var url = \'quizai_generate_question.php\';'; // Replace 'new_page.php' with the URL of the page you want to open
-echo '    var windowFeatures = \'width=600,height=400,resizable=yes\';'; // Adjust width, height, and other window features as needed
-echo '    window.open(url, \'New Window\', windowFeatures);'; // 'New Window' is the name of the window
-echo '}';
-echo '</script>';
+
+// echo '<script>';
+// echo 'function openNewWindow() {';
+// echo '    var url = \'quizai_generate_question.php\';'; // Replace 'new_page.php' with the URL of the page you want to open
+// echo '    var windowFeatures = \'width=600,height=400,resizable=yes\';'; // Adjust width, height, and other window features as needed
+// echo '    window.open(url, \'New Window\', windowFeatures);'; // 'New Window' is the name of the window
+// echo '}';
+// echo '</script>';
 
 
 echo '</span>' . K_NEWLINE;
