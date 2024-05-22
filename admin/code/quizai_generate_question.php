@@ -169,6 +169,23 @@ $m = F_db_fetch_array($r);
 $subjectName = htmlspecialchars($m['subject_name'], ENT_NOQUOTES, $l['a_meta_charset']);
 ?>
 
+<?php
+// Fetch modules from the database
+$sql = F_select_modules_sql();
+$r = F_db_query($sql, $db);
+$modules = [];
+while ($m = F_db_fetch_array($r)) {
+    $modules[] = $m;
+}
+
+// Fetch subjects from the database based on selected module
+$sql = F_select_subjects_sql('subject_module_id=' . $subject_module_id);
+$r = F_db_query($sql, $db);
+$subjects = [];
+while ($m = F_db_fetch_array($r)) {
+    $subjects[] = $m;
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -177,12 +194,10 @@ $subjectName = htmlspecialchars($m['subject_name'], ENT_NOQUOTES, $l['a_meta_cha
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generate Question from PDF</title>
     <style>
-        /* CSS to center the card and style the form */
         body {
             justify-content: center;
             align-items: center;
         }
-
         .card {
             background-color: #F6F6F6;
             padding: 20px;
@@ -190,7 +205,6 @@ $subjectName = htmlspecialchars($m['subject_name'], ENT_NOQUOTES, $l['a_meta_cha
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
         }
-
     </style>
 </head>
 <body>
@@ -198,74 +212,33 @@ $subjectName = htmlspecialchars($m['subject_name'], ENT_NOQUOTES, $l['a_meta_cha
     <div class="card-body">
         <form id="uploadForm" enctype="multipart/form-data" method="POST" action="quizai_generate_result.php">
             <input type="hidden" name="form_action" id="form_action" value="generate">
+            <input type="hidden" name="module_name" id="module_name" value="<?php echo htmlspecialchars($moduleName, ENT_NOQUOTES, $l['a_meta_charset']); ?>">
+            <input type="hidden" name="subject_name" id="subject_name" value="<?php echo htmlspecialchars($subjectName, ENT_NOQUOTES, $l['a_meta_charset']); ?>">
+
             <div class="mb-3">
-                <label for="subject_module_id" class="form-label">Module:</label>
+                <label for="module" class="form-label">Module:</label>
                 <input type="hidden" name="changemodule" id="changemodule" value="" />
-                <select name="subject_module_id" id="subject_module_id" size="0" onchange="submitForm('change_module');" class="form-control">
-                    <?php
-                        $sql = F_select_modules_sql();
-                        if ($r = F_db_query($sql, $db)) {
-                            $countitem = 1;
-                            while ($m = F_db_fetch_array($r)) {
-                                echo '<option value="' . $m['module_id'] . '"';
-                                if ($m['module_id'] == $subject_module_id) {
-                                    echo ' selected="selected"';
-                                }
-
-                                echo '>' . $countitem . '. ';
-                                if (F_getBoolean($m['module_enabled'])) {
-                                    echo '+';
-                                } else {
-                                    echo '-';
-                                }
-
-                                echo ' ' . htmlspecialchars($m['module_name'], ENT_NOQUOTES, $l['a_meta_charset']) . '&nbsp;</option>';
-                                ++$countitem;
-                            }
-
-                            if ($countitem == 1) {
-                                echo '<option value="0">&nbsp;</option>';
-                            }
-                        } else {
-                            F_display_db_error();
-                        }
-                    ?>
+                <select name="module" id="module" size="0" onchange="submitForm('change_module');" class="form-control">
+                    <?php foreach ($modules as $module): ?>
+                        <option value="<?php echo $module['module_name']; ?>" <?php echo ($module['module_name'] == $subject_module_id) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($module['module_name'], ENT_NOQUOTES, $l['a_meta_charset']); ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
+
             <div class="mb-3">
-                <label for="question_subject_id" class="form-label">Subject:</label>
+                <label for="subject" class="form-label">Subject:</label>
                 <input type="hidden" name="changecategory" id="changecategory" value="" />
-                <select name="question_subject_id" id="question_subject_id" size="0" onchange="submitForm('change_subject');" class="form-control">
-                    <?php
-                        $sql = F_select_subjects_sql('subject_module_id=' . $subject_module_id);
-                        if ($r = F_db_query($sql, $db)) { 
-                            $countitem = 1;
-                            while ($m = F_db_fetch_array($r)) {
-                                echo '<option value="' . $m['subject_id'] . '"';
-                                if ($m['subject_id'] == $question_subject_id) {
-                                    echo ' selected="selected"';
-                                }
-
-                                echo '>' . $countitem . '. ';
-                                if (F_getBoolean($m['subject_enabled'])) {
-                                    echo '+';
-                                } else {
-                                    echo '-';
-                                }
-
-                                echo ' ' . htmlspecialchars(F_remove_tcecode($m['subject_name']), ENT_NOQUOTES, $l['a_meta_charset']) . '</option>';
-                                ++$countitem;
-                            }
-
-                            if ($countitem == 1) {
-                                echo '<option value="0">&nbsp;</option>';
-                            }
-                        } else {
-                            F_display_db_error();
-                        }
-                    ?>
+                <select name="subject" id="subject" size="0" onchange="submitForm('change_subject');" class="form-control">
+                    <?php foreach ($subjects as $subject): ?>
+                        <option value="<?php echo $subject['subject_name']; ?>" <?php echo ($subject['subject_name'] == $question_subject_id) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($subject['subject_name'], ENT_NOQUOTES, $l['a_meta_charset']); ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
+
             <hr>
             <div class="mb-3">
                 <label for="file" class="form-label">Upload File:</label>

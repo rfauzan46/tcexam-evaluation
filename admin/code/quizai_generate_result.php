@@ -20,6 +20,13 @@ require_once('../../shared/code/tce_functions_auth_sql.php');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $answer_type = $_POST['answer_type'];
     $text = $_POST['text'];
+    $moduleName = $_POST['module'];
+    $subjectName = $_POST['subject'];
+
+    echo "<p>Answer Type: " . htmlspecialchars($answer_type, ENT_QUOTES, 'UTF-8') . "</p>";
+    echo "<p>Text: " . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') . "</p>";
+    echo "<p>Module: " . htmlspecialchars($moduleName, ENT_QUOTES, 'UTF-8') . "</p>";
+    echo "<p>Subject: " . htmlspecialchars($subjectName, ENT_QUOTES, 'UTF-8') . "</p>";
 
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
         // File is uploaded, handle file upload
