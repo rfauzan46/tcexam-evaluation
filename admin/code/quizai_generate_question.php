@@ -155,20 +155,6 @@ require_once('../../shared/code/tce_functions_auth_sql.php');
     }
 ?>
 
-<?php 
-$sql = F_select_modules_sql();
-$r = F_db_query($sql, $db);
-$m = F_db_fetch_array($r);
-$moduleName = htmlspecialchars($m['module_name'], ENT_NOQUOTES, $l['a_meta_charset']);
-?>
-
-<?php 
-$sql = F_select_subjects_sql();
-$r = F_db_query($sql, $db);
-$m = F_db_fetch_array($r);
-$subjectName = htmlspecialchars($m['subject_name'], ENT_NOQUOTES, $l['a_meta_charset']);
-?>
-
 <?php
 // Fetch modules from the database
 $sql = F_select_modules_sql();
@@ -212,15 +198,13 @@ while ($m = F_db_fetch_array($r)) {
     <div class="card-body">
         <form id="uploadForm" enctype="multipart/form-data" method="POST" action="quizai_generate_result.php">
             <input type="hidden" name="form_action" id="form_action" value="generate">
-            <input type="hidden" name="module_name" id="module_name" value="<?php echo htmlspecialchars($moduleName, ENT_NOQUOTES, $l['a_meta_charset']); ?>">
-            <input type="hidden" name="subject_name" id="subject_name" value="<?php echo htmlspecialchars($subjectName, ENT_NOQUOTES, $l['a_meta_charset']); ?>">
 
             <div class="mb-3">
                 <label for="module" class="form-label">Module:</label>
                 <input type="hidden" name="changemodule" id="changemodule" value="" />
-                <select name="module" id="module" size="0" onchange="submitForm('change_module');" class="form-control">
+                <select name="subject_module_id" id="subject_module_id" size="0" onchange="submitForm('change_module');" class="form-control">
                     <?php foreach ($modules as $module): ?>
-                        <option value="<?php echo $module['module_name']; ?>" <?php echo ($module['module_name'] == $subject_module_id) ? 'selected' : ''; ?>>
+                        <option value="<?php echo $module['module_id']; ?>" <?php echo ($module['module_id'] == $subject_module_id) ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars($module['module_name'], ENT_NOQUOTES, $l['a_meta_charset']); ?>
                         </option>
                     <?php endforeach; ?>
@@ -230,15 +214,14 @@ while ($m = F_db_fetch_array($r)) {
             <div class="mb-3">
                 <label for="subject" class="form-label">Subject:</label>
                 <input type="hidden" name="changecategory" id="changecategory" value="" />
-                <select name="subject" id="subject" size="0" onchange="submitForm('change_subject');" class="form-control">
+                <select name="subject" id="question_subject_id" size="0" onchange="submitForm('change_subject');" class="form-control">
                     <?php foreach ($subjects as $subject): ?>
-                        <option value="<?php echo $subject['subject_name']; ?>" <?php echo ($subject['subject_name'] == $question_subject_id) ? 'selected' : ''; ?>>
+                        <option value="<?php echo $subject['subject_id']; ?>" <?php echo ($subject['subject_id'] == $question_subject_id) ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars($subject['subject_name'], ENT_NOQUOTES, $l['a_meta_charset']); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
             </div>
-
             <hr>
             <div class="mb-3">
                 <label for="file" class="form-label">Upload File:</label>
@@ -247,21 +230,31 @@ while ($m = F_db_fetch_array($r)) {
             <div class="mb-3">
                 <label for="answer_type" class="form-label">Type:</label><br>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="answer_type" id="single_answer" value="single_answer">
+                    <input class="form-check-input" type="radio" name="answer_type" id="single_answer" value="single_answer" required>
                     <label class="form-check-label" for="single_answer">Single Answer</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="answer_type" id="multiple_answers" value="multiple_answers">
+                    <input class="form-check-input" type="radio" name="answer_type" id="multiple_answers" value="multiple_answers" required>
                     <label class="form-check-label" for="multiple_answers">Multiple Answers</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="answer_type" id="free_answer" value="free_answer">
+                    <input class="form-check-input" type="radio" name="answer_type" id="free_answer" value="free_answer" required>
                     <label class="form-check-label" for="free_answer">Free Answer</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="answer_type" id="ordering_answers" value="ordering_answers">
+                    <input class="form-check-input" type="radio" name="answer_type" id="ordering_answers" value="ordering_answers" required>
                     <label class="form-check-label" for="ordering_answers">Ordering Answers</label>
                 </div>
+                <div class="mb-3">
+                <label for="difficulty" class="form-label">Difficulty:</label><br>
+                        <select name="difficulty" id="difficulty" class="form-control">
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                </div>
+            </div>
+            <br/>
                 <button id="showTextareaBtn">Add more context (optional)</button>
                 <div class="mb-3" id="textareaWrapper" style="display: none;">
                     <label for="text" class="form-label">Input Text:</label>

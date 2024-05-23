@@ -94,13 +94,28 @@ class XMLQuestionImporter
      * @param $xmlfile (string) xml (XML) file name
      * @return true or die for parsing error
      */
-    public function __construct(
-        /**
-         * XML file.
-         * @private
-         */
-        private $xmlfile
-    ) {
+    public function __construct(?string $xmlData = null, ?string $xmlFile = null)
+    {
+        // Check if XML data is provided as a string
+        if ($xmlData !== null) {
+            $this->parseXmlString($xmlData);
+        }
+        // Check if XML file path is provided
+        elseif ($xmlFile !== null) {
+            $this->parseXmlFile($xmlFile);
+        }
+        // If neither XML data nor file path is provided, throw an exception or handle accordingly
+        else {
+            throw new Exception('No XML data or file path provided.');
+        }
+    }
+
+    /**
+     * Parse XML data from a string.
+     * @param string $xmlData XML data as a string.
+     */
+    private function parseXmlString(string $xmlData)
+    {
         // creates a new XML parser to be used by the other XML functions
         $this->parser = xml_parser_create();
         // the following function allows to use parser inside object
@@ -111,8 +126,8 @@ class XMLQuestionImporter
         xml_set_element_handler($this->parser, 'startElementHandler', 'endElementHandler');
         // sets the character data handler function for the XML parser
         xml_set_character_data_handler($this->parser, 'segContentHandler');
-        // start parsing an XML document
-        if (xml_parse($this->parser, file_get_contents($xmlfile)) === 0) {
+        // start parsing the XML data
+        if (xml_parse($this->parser, $xmlData) === 0) {
             die(sprintf(
                 'ERROR xmlResourceBundle :: XML error: %s at line %d',
                 xml_error_string(xml_get_error_code($this->parser)),
@@ -120,9 +135,26 @@ class XMLQuestionImporter
             ));
         }
 
-        // free this XML parser
+        // free the XML parser
         xml_parser_free($this->parser);
-        return true;
+    }
+
+    /**
+     * Parse XML data from a file.
+     * @param string $xmlFile Path to an XML file.
+     */
+    private function parseXmlFile(string $xmlFile)
+    {
+        // Check if the file exists
+        if (!file_exists($xmlFile)) {
+            die(sprintf('ERROR: File "%s" not found.', $xmlFile));
+        }
+
+        // Load the XML file content
+        $xmlData = file_get_contents($xmlFile);
+
+        // Call the parseXmlString method to parse the XML data
+        $this->parseXmlString($xmlData);
     }
 
     
@@ -559,6 +591,65 @@ class XMLQuestionImporter
             F_display_db_error();
         }
     }
+
+    // /**
+    //  * Import questions from API output.
+    //  * @param array $apiData Data received from the API.
+    //  * @return bool True on success, false on failure.
+    //  */
+    // public function importFromAPI(array $apiData)
+    // {
+    //     // Map API data to corresponding XML structure
+    //     $xmlData = [
+    //         'module' => [
+    //             'module_name' => 'default',
+    //             'module_enabled' => 'false',
+    //             'module_user_id' => '1',
+    //         ],
+    //         'subject' => [
+    //             'subject_name' => 'default',
+    //             'subject_description' => 'default',
+    //             'subject_enabled' => 'false',
+    //             'subject_user_id' => '1',
+    //             'subject_module_id' => '1',
+    //         ],
+    //         'question' => [
+    //             'question_subject_id' => '1',
+    //             'question_description' => isset($apiData['question']) ? $apiData['question'] : 'default',
+    //             'question_explanation' => '',
+    //             'question_type' => 'single', // Assuming default question type is single
+    //             'question_difficulty' => isset($apiData['difficulty']) ? $apiData['difficulty'] : 'Easy', // Assuming default difficulty is Easy
+    //             'question_enabled' => 'false',
+    //             'question_position' => 0,
+    //             'question_timer' => 0,
+    //             'question_fullscreen' => 'false',
+    //             'question_inline_answers' => 'false',
+    //             'question_auto_next' => 'false',
+    //         ],
+    //         'answer' => [
+    //             'answer_question_id' => '1',
+    //             'answer_description' => isset($apiData['option']) ? $apiData['option'] : 'default',
+    //             'answer_explanation' => '',
+    //             'answer_isright' => isset($apiData['answer']) ? ($apiData['answer'] === $apiData['option']) : 'false', // Assuming answer matches one of the options
+    //             'answer_enabled' => 'false',
+    //             'answer_position' => '0',
+    //             'answer_keyboard_key' => '',
+    //         ],
+    //     ];
+
+    //     // Merge with existing level data
+    //     $this->level_data = array_merge_recursive($this->level_data, $xmlData);
+
+    //     // Process the data as usual
+    //     $this->addModule();
+    //     $this->addSubject();
+    //     $this->addQuestion();
+    //     $this->addAnswer();
+
+    //     return true;
+    // }
+
+
 } // END OF CLASS
 
 //============================================================+

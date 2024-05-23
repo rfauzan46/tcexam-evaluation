@@ -17,16 +17,56 @@ require_once('../../shared/code/tce_functions_form.php');
 require_once('../../shared/code/tce_functions_tcecode.php');
 require_once('../../shared/code/tce_functions_auth_sql.php');
 
+// Fetch modules from the database
+$sql = F_select_modules_sql();
+$r = F_db_query($sql, $db);
+$modules = [];
+while ($m = F_db_fetch_array($r)) {
+    $modules[] = $m;
+}
+
+// Fetch subjects from the database based on selected module
+$sql = F_select_subjects_sql('subject_module_id=' . $subject_module_id);
+$r = F_db_query($sql, $db);
+$subjects = [];
+while ($m = F_db_fetch_array($r)) {
+    $subjects[] = $m;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $answer_type = $_POST['answer_type'];
     $text = $_POST['text'];
-    $moduleName = $_POST['module'];
-    $subjectName = $_POST['subject'];
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $selected_module_id = $_POST['subject_module_id'];
+        $module_name = '';
+        foreach ($modules as $module) {
+            if ($module['module_id'] == $selected_module_id) {
+                $module_name = $module['module_name'];
+                break;
+            }
+        }
+    }
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Retrieve the selected subject ID from the form submission
+        $selected_subject_id = $_POST['subject'];
+        
+        // Fetch the corresponding subject name from your data source (e.g., database)
+        $subject_name = ''; // Initialize the variable to store the subject name
+        foreach ($subjects as $subject) {
+            if ($subject['subject_id'] == $selected_subject_id) {
+                $subject_name = $subject['subject_name'];
+                break;
+            }
+        }
+    }
+    $subject = $_POST['subject'];
+    $difficulty = $_POST['difficulty'];
 
     echo "<p>Answer Type: " . htmlspecialchars($answer_type, ENT_QUOTES, 'UTF-8') . "</p>";
     echo "<p>Text: " . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') . "</p>";
-    echo "<p>Module: " . htmlspecialchars($moduleName, ENT_QUOTES, 'UTF-8') . "</p>";
-    echo "<p>Subject: " . htmlspecialchars($subjectName, ENT_QUOTES, 'UTF-8') . "</p>";
+    echo "<p>Module: " . htmlspecialchars($module_name, ENT_QUOTES, 'UTF-8') . "</p>";
+    echo "<p>Subject: " . htmlspecialchars($subject_name, ENT_QUOTES, 'UTF-8') . "</p>";
+    echo "<p>Difficulty: " . htmlspecialchars($difficulty, ENT_QUOTES, 'UTF-8') . "</p>";
 
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
         // File is uploaded, handle file upload
