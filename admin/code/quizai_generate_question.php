@@ -191,12 +191,20 @@ while ($m = F_db_fetch_array($r)) {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
         }
+        .form-group.d-flex {
+            display: flex; 
+        }
+
+        /* Adjust margin-right for spacing between the dropdowns */
+        .form-group.d-flex > div {
+            margin-right: 20px; /* Adjust as needed */
+        }
     </style>
 </head>
 <body>
 <div class="card">
     <div class="card-body">
-        <form id="uploadForm" enctype="multipart/form-data" method="POST" action="quizai_generate_result.php">
+        <form id="uploadForm" enctype="multipart/form-data" method="POST" action="quizai_generate_result_temp.php">
             <input type="hidden" name="form_action" id="form_action" value="generate">
 
             <div class="mb-3">
@@ -245,13 +253,22 @@ while ($m = F_db_fetch_array($r)) {
                     <input class="form-check-input" type="radio" name="answer_type" id="ordering_answers" value="ordering_answers" required>
                     <label class="form-check-label" for="ordering_answers">Ordering Answers</label>
                 </div>
-                <div class="mb-3">
-                <label for="difficulty" class="form-label">Difficulty:</label><br>
+                <div class="form-group d-flex">
+                    <div class="mr-3">
+                        <label for="difficulty" class="form-label">Difficulty:</label><br>
                         <select name="difficulty" id="difficulty" class="form-control">
                             <option value="easy">Easy</option>
                             <option value="medium">Medium</option>
                             <option value="hard">Hard</option>
                         </select>
+                    </div>
+                    <div>
+                        <label for="language" class="form-label">Language:</label><br>
+                        <select name="language" id="language" class="form-control">
+                            <option value="indo">Indonesia</option>
+                            <option value="eng">English</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <br/>
@@ -273,7 +290,7 @@ while ($m = F_db_fetch_array($r)) {
         if (action === 'change_module' || action === 'change_subject') {
             document.getElementById('uploadForm').action = ''; // No specific action for module/subject change
         } else {
-            document.getElementById('uploadForm').action = 'quizai_generate_result.php'; // Default action
+            document.getElementById('uploadForm').action = 'quizai_generate_result_temp.php'; // Default action
         }
         document.getElementById('uploadForm').submit();
     }
