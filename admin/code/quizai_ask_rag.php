@@ -3,20 +3,18 @@
 $request_body = file_get_contents('php://input');
 $data = json_decode($request_body, true);
 
-// Check if query is provided
-if (empty($data['query'])) {
-    echo json_encode(['error' => 'Query not provided']);
-    exit;
-}
-
 // Prepare data to be sent to /ask_rag
 $ask_rag_api_url = 'http://localhost:19645/ask_rag';
 
-// Add file path to data if provided
-$query_data = ['query' => $data['query']];
-if (!empty($data['file_path'])) {
-    $query_data['file_path'] = $data['file_path'];
-}
+// Add all required fields to query_data
+$query_data = [
+    'extra_instructions' => $data['extra_instructions'],
+    'file_path' => $data['file_path'],
+    'question_type' => $data['question_type'],
+    'subject' => $data['subject'],
+    'difficulty' => $data['difficulty'],
+    'language' => $data['language']
+];
 
 // Initialize cURL session for /ask_rag request
 $ch = curl_init();

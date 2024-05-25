@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_questions'])
         $questionElement->appendChild($questionEnabled);
 
         // Create and append the type element for question
-        $questionType = $doc->createElement('type', 'multiple');
+        $questionType = $doc->createElement('type', htmlspecialchars($answer_type, ENT_QUOTES, 'UTF-8'));
         $questionElement->appendChild($questionType);
 
         // Create and append the difficulty element for question

@@ -289,8 +289,8 @@ foreach ($dummyData['questions'] as $qIndex => $question) {
 echo '</div>'; // Close container
 echo '<input type="hidden" name="answer_type" value="' . htmlspecialchars($answer_type, ENT_QUOTES, 'UTF-8') . '">';
 echo '<input type="hidden" name="text" value="' . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') . '">';
-echo '<input type="hidden" name="subject_module_id" value="' . htmlspecialchars($selected_module_id, ENT_QUOTES, 'UTF-8') . '">';
-echo '<input type="hidden" name="subject" value="' . htmlspecialchars($selected_subject_id, ENT_QUOTES, 'UTF-8') . '">';
+echo '<input type="hidden" name="module" value="' . htmlspecialchars($module_name, ENT_QUOTES, 'UTF-8') . '">';
+echo '<input type="hidden" name="subject" value="' . htmlspecialchars($subject_name, ENT_QUOTES, 'UTF-8') . '">';
 echo '<input type="submit" value="Submit">';
 echo '</form>';
 }

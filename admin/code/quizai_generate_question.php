@@ -233,20 +233,20 @@ while ($m = F_db_fetch_array($r)) {
             <hr>
             <div class="mb-3">
                 <label for="file" class="form-label">Upload File:</label>
-                <input type="file" class="form-control" name="file" id="file">
+                <input type="file" class="form-control" name="file" id="file" required>
             </div>
             <div class="mb-3">
                 <label for="answer_type" class="form-label">Type:</label><br>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="answer_type" id="single_answer" value="single_answer" required>
+                    <input class="form-check-input" type="radio" name="answer_type" id="single_answer" value="single" required>
                     <label class="form-check-label" for="single_answer">Single Answer</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="answer_type" id="multiple_answers" value="multiple_answers" required>
+                    <input class="form-check-input" type="radio" name="answer_type" id="multiple_answers" value="multiple" required>
                     <label class="form-check-label" for="multiple_answers">Multiple Answers</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="answer_type" id="free_answer" value="free_answer" required>
+                    <input class="form-check-input" type="radio" name="answer_type" id="free_answer" value="text" required>
                     <label class="form-check-label" for="free_answer">Free Answer</label>
                 </div>
                 <div class="form-check">

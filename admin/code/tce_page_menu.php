@@ -178,8 +178,8 @@ $menu['tce_menu_modules.php']['sub'] = [
     ],
     'quizai_generate_question.php' => [
         'link' => 'quizai_generate_question.php',
-        'title' => 'Generate Question with AI',
-        'name' => 'Generate Question with AI',
+        'title' => 'Generate Question from PDF',
+        'name' => 'Generate PDF',
         'level' => K_AUTH_ADMIN_SSLCERT,
         'key' => '',
         'enabled' => true,

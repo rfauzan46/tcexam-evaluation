@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "<p>Difficulty: " . htmlspecialchars($difficulty, ENT_QUOTES, 'UTF-8') . "</p>";
     echo "<p>Language: " . htmlspecialchars($language, ENT_QUOTES, 'UTF-8') . "</p>";
 
-    if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+    // if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
         // File is uploaded, handle file upload
         $file = $_FILES['file'];
 
@@ -116,32 +116,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo '<p>Error: ' . ($data['error'] ?? 'File upload failed') . '</p>';
             echo '</div></div></div>';
         }
-    } else {
-        // No file uploaded, directly send the ask_rag request
-        $queryData = [
-            'query' => $text,
-            'answer_type' => $answer_type
-        ];
+    // } 
+    // else {
+    //     // No file uploaded, directly send the ask_rag request
+    //     $queryData = [
+    //         'query' => $text,
+    //         'answer_type' => $answer_type
+    //     ];
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'quizai_ask_rag.php');
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($queryData));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        curl_close($ch);
+    //     $ch = curl_init();
+    //     curl_setopt($ch, CURLOPT_URL, 'quizai_ask_rag.php');
+    //     curl_setopt($ch, CURLOPT_POST, 1);
+    //     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($queryData));
+    //     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    //     $response = curl_exec($ch);
+    //     curl_close($ch);
 
-        $data = json_decode($response, true);
+    //     $data = json_decode($response, true);
 
-        echo '<div class="center-card"><div class="card" style="background-color:#F6F6F6"><div class="card-body">';
-        if (isset($data['response'])) {
-            echo '<pre>' . json_encode($data['response'], JSON_PRETTY_PRINT) . '</pre>';
-        } else {
-            echo '<p>Error: ' . ($data['error'] ?? 'Unknown error') . '</p>';
-        }
-        echo '</div></div></div>';
-    }
+    //     echo '<div class="center-card"><div class="card" style="background-color:#F6F6F6"><div class="card-body">';
+    //     if (isset($data['response'])) {
+    //         echo '<pre>' . json_encode($data['response'], JSON_PRETTY_PRINT) . '</pre>';
+    //     } else {
+    //         echo '<p>Error: ' . ($data['error'] ?? 'Unknown error') . '</p>';
+    //     }
+    //     echo '</div></div></div>';
+    // }
 }
 
 
