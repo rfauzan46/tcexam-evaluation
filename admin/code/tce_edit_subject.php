@@ -450,6 +450,8 @@ echo '<span class="right">' . K_NEWLINE;
 
 if (isset($subject_id) && $subject_id > 0) {
     echo '<a href="tce_edit_question.php?subject_module_id=' . $subject_module_id . '&amp;question_subject_id=' . $subject_id . '" title="' . $l['t_questions_editor'] . '" class="xmlbutton">' . $l['t_questions_editor'] . ' &gt;</a>';
+    echo '<br/><br/>';    
+    echo '<a href="quizai_generate_question.php?subject_module_id=' . $subject_module_id . '&amp;question_subject_id=' . $subject_id . '" title="Generate with PDF" class="xmlbutton"> Generate with PDF &gt;</a>';
 }
 
 echo '&nbsp;' . K_NEWLINE;

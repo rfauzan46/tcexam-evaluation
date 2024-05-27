@@ -204,7 +204,7 @@ while ($m = F_db_fetch_array($r)) {
 <body>
 <div class="card">
     <div class="card-body">
-        <form id="uploadForm" enctype="multipart/form-data" method="POST" action="quizai_generate_result_temp.php">
+        <form id="uploadForm" enctype="multipart/form-data" method="POST" action="quizai_generate_result.php">
             <input type="hidden" name="form_action" id="form_action" value="generate">
 
             <div class="mb-3">
@@ -254,14 +254,14 @@ while ($m = F_db_fetch_array($r)) {
                     <label class="form-check-label" for="ordering_answers">Ordering Answers</label>
                 </div>
                 <div class="form-group d-flex">
-                    <div class="mr-3">
+                    <!-- <div class="mr-3">
                         <label for="difficulty" class="form-label">Difficulty:</label><br>
                         <select name="difficulty" id="difficulty" class="form-control">
                             <option value="easy">Easy</option>
                             <option value="medium">Medium</option>
                             <option value="hard">Hard</option>
                         </select>
-                    </div>
+                    </div> -->
                     <div>
                         <label for="language" class="form-label">Language:</label><br>
                         <select name="language" id="language" class="form-control">

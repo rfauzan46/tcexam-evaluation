@@ -55,19 +55,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($subjects as $subject) {
             if ($subject['subject_id'] == $selected_subject_id) {
                 $subject_name = $subject['subject_name'];
+                $subject_description = $subject['subject_description'];
                 break;
             }
         }
     }
     $subject = $_POST['subject'];
-    $difficulty = $_POST['difficulty'];
+    // $difficulty = $_POST['difficulty'];
     $language = $_POST['language'];
 
     echo "<p>Answer Type: " . htmlspecialchars($answer_type, ENT_QUOTES, 'UTF-8') . "</p>";
     echo "<p>Text: " . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') . "</p>";
     echo "<p>Module: " . htmlspecialchars($module_name, ENT_QUOTES, 'UTF-8') . "</p>";
     echo "<p>Subject: " . htmlspecialchars($subject_name, ENT_QUOTES, 'UTF-8') . "</p>";
-    echo "<p>Difficulty: " . htmlspecialchars($difficulty, ENT_QUOTES, 'UTF-8') . "</p>";
+    echo "<p>Subject: " . htmlspecialchars($subject_description, ENT_QUOTES, 'UTF-8') . "</p>";
+    // echo "<p>Difficulty: " . htmlspecialchars($difficulty, ENT_QUOTES, 'UTF-8') . "</p>";
     echo "<p>Language: " . htmlspecialchars($language, ENT_QUOTES, 'UTF-8') . "</p>";
 
     // if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {

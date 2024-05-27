@@ -41,24 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_questions'])
     $text = $_POST['text'];
     $selected_module_id = $_POST['module'];
     $selected_subject_id = $_POST['subject'];
+    $selected_subject_desc = $_POST['subject_desc'];
     $difficulties = $_POST['difficulty'];
     $questions = $_POST['questions'];
-
-    $module_name = '';
-    foreach ($modules as $module) {
-        if ($module['module_id'] == $selected_module_id) {
-            $module_name = $module['module_name'];
-            break;
-        }
-    }
-
-    $subject_name = '';
-    foreach ($subjects as $subject) {
-        if ($subject['subject_id'] == $selected_subject_id) {
-            $subject_name = $subject['subject_name'];
-            break;
-        }
-    }
 
     // Get the selected questions from the form
     $selectedQuestions = $_POST['selected_questions'];
@@ -103,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_questions'])
     $subject->appendChild($subjectName);
 
     // Create and append the description element for subject
-    $subjectDescription = $doc->createElement('description', htmlspecialchars('This is the description of the exam', ENT_QUOTES, 'UTF-8'));
+    $subjectDescription = $doc->createElement('description', htmlspecialchars($selected_subject_desc, ENT_QUOTES, 'UTF-8'));
     $subject->appendChild($subjectDescription);
 
     // Create and append the enabled element for subject
