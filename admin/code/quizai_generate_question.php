@@ -265,8 +265,8 @@ while ($m = F_db_fetch_array($r)) {
                     <div>
                         <label for="language" class="form-label">Language:</label><br>
                         <select name="language" id="language" class="form-control">
-                            <option value="indo">Indonesia</option>
-                            <option value="eng">English</option>
+                            <option value="indonesian">Indonesia</option>
+                            <option value="english">English</option>
                         </select>
                     </div>
                 </div>

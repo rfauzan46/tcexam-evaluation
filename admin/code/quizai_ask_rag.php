@@ -6,14 +6,42 @@ $data = json_decode($request_body, true);
 // Prepare data to be sent to /ask_rag
 $ask_rag_api_url = 'http://localhost:19645/ask_rag';
 
-// Add all required fields to query_data
+// Adjust the query_data structure to match the required format
 $query_data = [
-    'extra_instructions' => $data['extra_instructions'],
-    'file_path' => $data['file_path'],
-    'question_type' => $data['question_type'],
-    'subject' => $data['subject'],
-    'difficulty' => $data['difficulty'],
-    'language' => $data['language']
+    [
+        'key' => 'file',
+        'description' => '',
+        'type' => 'file',
+        'enabled' => true,
+        'value' => [$data['file_path']],
+        'fileNotInWorkingDirectoryWarning' => "This file isn't in your working directory. Teammates you share this request with won't be able to use this file. To make collaboration easier you can setup your working directory in Settings.",
+        'filesNotInWorkingDirectory' => [$data['file_path']]
+    ],
+    [
+        'key' => 'extra_instruction',
+        'value' => $data['extra_instructions'] ?? '',
+        'description' => '',
+        'type' => 'text',
+        'enabled' => true
+    ],
+    [
+        'key' => 'question_type',
+        'value' => $data['question_type'],
+        'type' => 'text',
+        'enabled' => true
+    ],
+    [
+        'key' => 'subject',
+        'value' => $data['subject'],
+        'type' => 'text',
+        'enabled' => true
+    ],
+    [
+        'key' => 'language',
+        'value' => $data['language'],
+        'type' => 'text',
+        'enabled' => true
+    ]
 ];
 
 // Initialize cURL session for /ask_rag request
