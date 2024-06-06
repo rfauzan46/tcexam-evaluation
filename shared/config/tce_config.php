@@ -91,7 +91,7 @@ define('K_OTP_LOGIN', false);
 /**
  * Ratio at which the delay will be increased after every failed login attempt.
  */
-define('K_BRUTE_FORCE_DELAY_RATIO', 2);
+define('K_BRUTE_FORCE_DELAY_RATIO', 0);
 
 /**
  * Number of difficulty levels for questions.
