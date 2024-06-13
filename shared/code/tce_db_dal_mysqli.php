@@ -43,6 +43,7 @@
  */
 function F_db_connect($host = 'localhost', $port = '3306', $username = 'root', $password = '', $database = '')
 {
+    $port = (int) $port;
     if (! $db = @mysqli_connect($host, $username, $password, $database, $port)) {
         return false;
     }
