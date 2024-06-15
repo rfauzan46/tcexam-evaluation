@@ -31,17 +31,17 @@
 /**
  * Host URL (e.g.: "http://www.yoursite.com").
  */
-define('K_PATH_HOST', 'http://34.173.135.248');
+define('K_PATH_HOST', 'http://34.19.6.58/');
 
 /**
  * Relative URL where this program is installed (e.g.: "/").
  */
-define('K_PATH_TCEXAM', '/tcexam-evaluation/');
+define('K_PATH_TCEXAM', '/tcexam/');
 
 /**
  * Real full path where this program is installed (e.g: "/var/www/html/TCExam/").
  */
-define('K_PATH_MAIN', '/var/www/html/tcexam-evaluation/');
+define('K_PATH_MAIN', '/var/www/html/tcexam/');
 
 /**
  * Constant used on TCPDF library.
