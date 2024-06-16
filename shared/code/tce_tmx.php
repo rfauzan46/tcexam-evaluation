@@ -114,7 +114,7 @@ class TMXResourceBundle
         if (F_file_exists($this->cachefile)) {
             // read data from cache
             require_once($this->cachefile);
-            $this->resource = $tmxfile;
+            $this->resource = $tmx;
         } else {
             if (! empty($this->cachefile)) {
                 // open cache file
