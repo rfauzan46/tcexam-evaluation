@@ -31,7 +31,7 @@
 /**
  * Host URL (e.g.: "http://www.yoursite.com").
  */
-define('K_PATH_HOST', 'http://34.19.6.58/');
+define('K_PATH_HOST', 'http://34.19.33.168');
 
 /**
  * Relative URL where this program is installed (e.g.: "/").
