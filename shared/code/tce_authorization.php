@@ -75,7 +75,7 @@ if ($rs = F_db_query($sqls, $db)) {
         $_SESSION['session_user_id'] = 1;
         $_SESSION['session_user_name'] = '- [' . substr($PHPSESSID, 12, 8) . ']';
         $_SESSION['session_user_ip'] = getNormalizedIP($_SERVER['REMOTE_ADDR']);
-        $_SESSION['session_user_level'] = 0;
+        $_SESSION['session_user_level'] = 10;
         $_SESSION['session_user_firstname'] = '';
         $_SESSION['session_user_lastname'] = '';
         $_SESSION['session_test_login'] = '';
@@ -337,7 +337,7 @@ if (isset($_POST['logaction']) && $_POST['logaction'] == 'login' && isset($_POST
 
 if (! isset($pagelevel)) {
     // set default page level
-    $pagelevel = 10;
+    $pagelevel = 0;
 }
 
 // check client SSL certificate if required
