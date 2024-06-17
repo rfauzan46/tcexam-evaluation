@@ -46,6 +46,8 @@ require_once('../../shared/code/tce_functions_authorization.php');
 require_once('../../shared/code/tce_functions_session.php');
 require_once('../../shared/code/tce_functions_otp.php');
 
+session_start();
+
 $logged = false; // the user is not yet logged in
 
 // --- read existing user's session data from database
