@@ -228,8 +228,8 @@ if (isset($_POST['logaction']) && $_POST['logaction'] == 'login' && isset($_POST
                     $_SESSION['session_user_name'] = $m['user_name'];
                     $_SESSION['session_user_ip'] = getNormalizedIP($_SERVER['REMOTE_ADDR']);
                     $_SESSION['session_user_level'] = $m['user_level'];
-                    // $_SESSION['session_user_firstname'] = urlencode($m['user_firstname']);
-                    // $_SESSION['session_user_lastname'] = urlencode($m['user_lastname']);
+                    $_SESSION['session_user_firstname'] = urlencode($m['user_firstname']);
+                    $_SESSION['session_user_lastname'] = urlencode($m['user_lastname']);
                     $_SESSION['session_test_login'] = '';
                     // read client cookie
                     $_SESSION['session_last_visit'] = isset($_COOKIE['LastVisit']) ? (int) $_COOKIE['LastVisit'] : 0;
@@ -367,18 +367,18 @@ if ($pagelevel && $_SESSION['session_user_level'] < $pagelevel) {
 }
 
 if ($logged) { //if user is just logged in: reloads page
-    // // html redirect
-    // $htmlredir = '<?xml version="1.0" encoding="' . $l['a_meta_charset'] . '"?' . '>' . K_NEWLINE;
-    // $htmlredir .= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . K_NEWLINE;
-    // $htmlredir .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="' . $l['a_meta_language'] . '" lang="' . $l['a_meta_language'] . '" dir="' . $l['a_meta_dir'] . '">' . K_NEWLINE;
-    // $htmlredir .= '<head>' . K_NEWLINE;
-    // $htmlredir .= '<title>ENTER</title>' . K_NEWLINE;
-    // $htmlredir .= '<meta http-equiv="refresh" content="0" />' . K_NEWLINE; //reload page
-    // $htmlredir .= '</head>' . K_NEWLINE;
-    // $htmlredir .= '<body>' . K_NEWLINE;
-    // $htmlredir .= '<a href="' . $_SERVER['SCRIPT_NAME'] . '">ENTER</a>' . K_NEWLINE;
-    // $htmlredir .= '</body>' . K_NEWLINE;
-    // $htmlredir .= '</html>' . K_NEWLINE;
+    // html redirect
+    $htmlredir = '<?xml version="1.0" encoding="' . $l['a_meta_charset'] . '"?' . '>' . K_NEWLINE;
+    $htmlredir .= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . K_NEWLINE;
+    $htmlredir .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="' . $l['a_meta_language'] . '" lang="' . $l['a_meta_language'] . '" dir="' . $l['a_meta_dir'] . '">' . K_NEWLINE;
+    $htmlredir .= '<head>' . K_NEWLINE;
+    $htmlredir .= '<title>ENTER</title>' . K_NEWLINE;
+    $htmlredir .= '<meta http-equiv="refresh" content="0" />' . K_NEWLINE; //reload page
+    $htmlredir .= '</head>' . K_NEWLINE;
+    $htmlredir .= '<body>' . K_NEWLINE;
+    $htmlredir .= '<a href="' . $_SERVER['SCRIPT_NAME'] . '">ENTER</a>' . K_NEWLINE;
+    $htmlredir .= '</body>' . K_NEWLINE;
+    $htmlredir .= '</html>' . K_NEWLINE;
     switch (K_REDIRECT_LOGIN_MODE) {
         case 1: {
             // relative redirect
@@ -390,18 +390,18 @@ if ($logged) { //if user is just logged in: reloads page
             header('Location: ' . K_PATH_HOST . $_SERVER['SCRIPT_NAME']);
             break;
         }
-        // case 3: {
-        //     // html redirect
-        //     echo $htmlredir;
-        //     break;
-        // }
-        // case 4:
-        // default: {
-        //     // full redirect
-        //     header('Location: ' . K_PATH_HOST . $_SERVER['SCRIPT_NAME']);
-        //     echo $htmlredir;
-        //     break;
-        // }
+        case 3: {
+            // html redirect
+            echo $htmlredir;
+            break;
+        }
+        case 4:
+        default: {
+            // full redirect
+            header('Location: ' . K_PATH_HOST . $_SERVER['SCRIPT_NAME']);
+            echo $htmlredir;
+            break;
+        }
     }
 
     exit;
