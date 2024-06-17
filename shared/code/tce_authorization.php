@@ -71,62 +71,63 @@ if ($rs = F_db_query($sqls, $db)) {
             F_display_db_error();
         }
     } else { // session do not exist so, create new anonymous session
-        $_SESSION['session_hash'] = $fingerprintkey;
-        $_SESSION['session_user_id'] = 1;
-        $_SESSION['session_user_name'] = '- [' . substr($PHPSESSID, 12, 8) . ']';
-        $_SESSION['session_user_ip'] = getNormalizedIP($_SERVER['REMOTE_ADDR']);
-        $_SESSION['session_user_level'] = 0;
-        $_SESSION['session_user_firstname'] = '';
-        $_SESSION['session_user_lastname'] = '';
-        $_SESSION['session_test_login'] = '';
-        // read client cookie
-        $_SESSION['session_last_visit'] = isset($_COOKIE['LastVisit']) ? (int) $_COOKIE['LastVisit'] : 0;
+        F_display_db_error();
+        // $_SESSION['session_hash'] = $fingerprintkey;
+        // $_SESSION['session_user_id'] = 1;
+        // $_SESSION['session_user_name'] = '- [' . substr($PHPSESSID, 12, 8) . ']';
+        // $_SESSION['session_user_ip'] = getNormalizedIP($_SERVER['REMOTE_ADDR']);
+        // $_SESSION['session_user_level'] = 0;
+        // $_SESSION['session_user_firstname'] = '';
+        // $_SESSION['session_user_lastname'] = '';
+        // $_SESSION['session_test_login'] = '';
+        // // read client cookie
+        // $_SESSION['session_last_visit'] = isset($_COOKIE['LastVisit']) ? (int) $_COOKIE['LastVisit'] : 0;
 
-        // set client cookie
-        $cookie_now_time = time(); // note: while time() function returns a 32 bit integer, it works fine until year 2038.
-        $cookie_expire_time = $cookie_now_time + K_COOKIE_EXPIRE; // set cookie expiration time
-        setcookie(
-            'LastVisit', 
-            $cookie_now_time,
-            [
-                'expires' => $cookie_expire_time,
-                'path' => K_COOKIE_PATH,
-                'domain' => K_COOKIE_DOMAIN,
-                'secure' => K_COOKIE_SECURE,
-                'httponly' => K_COOKIE_HTTPONLY,
-                'samesite' => K_COOKIE_SAMESITE,
-            ]);
-        setcookie(
-            'PHPSESSID',
-            $PHPSESSID,
-            [
-                'expires' => $cookie_expire_time,
-                'path' => K_COOKIE_PATH,
-                'domain' => K_COOKIE_DOMAIN,
-                'secure' => K_COOKIE_SECURE,
-                'httponly' => K_COOKIE_HTTPONLY,
-                'samesite' => K_COOKIE_SAMESITE,
-            ]);
-        // track when user request logout
-        if (isset($_REQUEST['logout'])) {
-            $_SESSION['logout'] = true;
-            if (strlen(K_LOGOUT_URL) > 0) {
-                $htmlredir = '<?xml version="1.0" encoding="' . $l['a_meta_charset'] . '"?' . '>' . K_NEWLINE;
-                $htmlredir .= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">' . K_NEWLINE;
-                $htmlredir .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="' . $l['a_meta_language'] . '" lang="' . $l['a_meta_language'] . '" dir="' . $l['a_meta_dir'] . '">' . K_NEWLINE;
-                $htmlredir .= '<head>' . K_NEWLINE;
-                $htmlredir .= '<title>LOGOUT</title>' . K_NEWLINE;
-                $htmlredir .= '<meta http-equiv="refresh" content="0;url=' . K_LOGOUT_URL . '" />' . K_NEWLINE;
-                $htmlredir .= '</head>' . K_NEWLINE;
-                $htmlredir .= '<body>' . K_NEWLINE;
-                $htmlredir .= '<a href="' . K_LOGOUT_URL . '">LOGOUT...</a>' . K_NEWLINE;
-                $htmlredir .= '</body>' . K_NEWLINE;
-                $htmlredir .= '</html>' . K_NEWLINE;
-                header('Location: ' . K_LOGOUT_URL);
-                echo $htmlredir;
-                exit;
-            }
-        }
+        // // set client cookie
+        // $cookie_now_time = time(); // note: while time() function returns a 32 bit integer, it works fine until year 2038.
+        // $cookie_expire_time = $cookie_now_time + K_COOKIE_EXPIRE; // set cookie expiration time
+        // setcookie(
+        //     'LastVisit', 
+        //     $cookie_now_time,
+        //     [
+        //         'expires' => $cookie_expire_time,
+        //         'path' => K_COOKIE_PATH,
+        //         'domain' => K_COOKIE_DOMAIN,
+        //         'secure' => K_COOKIE_SECURE,
+        //         'httponly' => K_COOKIE_HTTPONLY,
+        //         'samesite' => K_COOKIE_SAMESITE,
+        //     ]);
+        // setcookie(
+        //     'PHPSESSID',
+        //     $PHPSESSID,
+        //     [
+        //         'expires' => $cookie_expire_time,
+        //         'path' => K_COOKIE_PATH,
+        //         'domain' => K_COOKIE_DOMAIN,
+        //         'secure' => K_COOKIE_SECURE,
+        //         'httponly' => K_COOKIE_HTTPONLY,
+        //         'samesite' => K_COOKIE_SAMESITE,
+        //     ]);
+        // // track when user request logout
+        // if (isset($_REQUEST['logout'])) {
+        //     $_SESSION['logout'] = true;
+        //     if (strlen(K_LOGOUT_URL) > 0) {
+        //         $htmlredir = '<?xml version="1.0" encoding="' . $l['a_meta_charset'] . '"?' . '>' . K_NEWLINE;
+        //         $htmlredir .= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">' . K_NEWLINE;
+        //         $htmlredir .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="' . $l['a_meta_language'] . '" lang="' . $l['a_meta_language'] . '" dir="' . $l['a_meta_dir'] . '">' . K_NEWLINE;
+        //         $htmlredir .= '<head>' . K_NEWLINE;
+        //         $htmlredir .= '<title>LOGOUT</title>' . K_NEWLINE;
+        //         $htmlredir .= '<meta http-equiv="refresh" content="0;url=' . K_LOGOUT_URL . '" />' . K_NEWLINE;
+        //         $htmlredir .= '</head>' . K_NEWLINE;
+        //         $htmlredir .= '<body>' . K_NEWLINE;
+        //         $htmlredir .= '<a href="' . K_LOGOUT_URL . '">LOGOUT...</a>' . K_NEWLINE;
+        //         $htmlredir .= '</body>' . K_NEWLINE;
+        //         $htmlredir .= '</html>' . K_NEWLINE;
+        //         header('Location: ' . K_LOGOUT_URL);
+        //         echo $htmlredir;
+        //         exit;
+        //     }
+        // }
     }
 } else {
     F_display_db_error();
