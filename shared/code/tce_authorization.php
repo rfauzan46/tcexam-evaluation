@@ -108,25 +108,25 @@ if ($rs = F_db_query($sqls, $db)) {
                 'samesite' => K_COOKIE_SAMESITE,
             ]);
         // track when user request logout
-        // if (isset($_REQUEST['logout'])) {
-        //     $_SESSION['logout'] = true;
-        //     if (strlen(K_LOGOUT_URL) > 0) {
-        //         $htmlredir = '<?xml version="1.0" encoding="' . $l['a_meta_charset'] . '"?' . '>' . K_NEWLINE;
-        //         $htmlredir .= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">' . K_NEWLINE;
-        //         $htmlredir .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="' . $l['a_meta_language'] . '" lang="' . $l['a_meta_language'] . '" dir="' . $l['a_meta_dir'] . '">' . K_NEWLINE;
-        //         $htmlredir .= '<head>' . K_NEWLINE;
-        //         $htmlredir .= '<title>LOGOUT</title>' . K_NEWLINE;
-        //         $htmlredir .= '<meta http-equiv="refresh" content="0;url=' . K_LOGOUT_URL . '" />' . K_NEWLINE;
-        //         $htmlredir .= '</head>' . K_NEWLINE;
-        //         $htmlredir .= '<body>' . K_NEWLINE;
-        //         $htmlredir .= '<a href="' . K_LOGOUT_URL . '">LOGOUT...</a>' . K_NEWLINE;
-        //         $htmlredir .= '</body>' . K_NEWLINE;
-        //         $htmlredir .= '</html>' . K_NEWLINE;
-        //         header('Location: ' . K_LOGOUT_URL);
-        //         echo $htmlredir;
-        //         exit;
-        //     }
-        // }
+        if (isset($_REQUEST['logout'])) {
+            $_SESSION['logout'] = true;
+            if (strlen(K_LOGOUT_URL) > 0) {
+                $htmlredir = '<?xml version="1.0" encoding="' . $l['a_meta_charset'] . '"?' . '>' . K_NEWLINE;
+                $htmlredir .= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">' . K_NEWLINE;
+                $htmlredir .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="' . $l['a_meta_language'] . '" lang="' . $l['a_meta_language'] . '" dir="' . $l['a_meta_dir'] . '">' . K_NEWLINE;
+                $htmlredir .= '<head>' . K_NEWLINE;
+                $htmlredir .= '<title>LOGOUT</title>' . K_NEWLINE;
+                $htmlredir .= '<meta http-equiv="refresh" content="0;url=' . K_LOGOUT_URL . '" />' . K_NEWLINE;
+                $htmlredir .= '</head>' . K_NEWLINE;
+                $htmlredir .= '<body>' . K_NEWLINE;
+                $htmlredir .= '<a href="' . K_LOGOUT_URL . '">LOGOUT...</a>' . K_NEWLINE;
+                $htmlredir .= '</body>' . K_NEWLINE;
+                $htmlredir .= '</html>' . K_NEWLINE;
+                header('Location: ' . K_LOGOUT_URL);
+                echo $htmlredir;
+                exit;
+            }
+        }
     }
 } else {
     F_display_db_error();
@@ -337,7 +337,7 @@ if (isset($_POST['logaction']) && $_POST['logaction'] == 'login' && isset($_POST
 
 if (! isset($pagelevel)) {
     // set default page level
-    $pagelevel = 0;
+    $pagelevel = 10;
 }
 
 // check client SSL certificate if required
