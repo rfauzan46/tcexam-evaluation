@@ -92,6 +92,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Initialize cURL session for ask_rag request
         $ch = curl_init();
+        if ($ch === false) {
+            die('Failed to initialize cURL session');
+        }
         curl_setopt($ch, CURLOPT_URL, 'http://34.105.76.80:20000/ask_rag');
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $queryData);
@@ -99,6 +102,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 300); // Set timeout to 300 seconds
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60); // Set connection timeout to 60 seconds
+
+        // Debug: Print cURL options
+        echo '<pre>';
+        print_r(curl_getinfo($ch));
+        echo '</pre>';
 
         // Execute cURL request for ask_rag
         $response = curl_exec($ch);
