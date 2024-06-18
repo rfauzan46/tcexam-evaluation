@@ -102,132 +102,153 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Close cURL session for ask_rag request
         curl_close($ch);
 
-        $data = json_decode($response, true);
-//         $pattern = '/\bques=(.*?)\n\s*opt_A=(.*?)\n\s*opt_B=(.*?)\n\s*opt_C=(.*?)\n\s*opt_D=(.*?)\n\s*ans=(.*?)\n\s*exp=(.*?)(?=\n\s*ques=|\n\s*$)/s';
-//         preg_match_all($pattern, $data['response'], $matches, PREG_SET_ORDER);
+        // Debug: Print the raw response
+        // echo '<pre>';
+        // echo htmlspecialchars($response);
+        // echo '</pre>';
+
+        // Find the JSON part in the raw response
+        $startPos = strpos($response, 'AI:');
+        $jsonPartStart = $startPos + strlen('AI: Generated Questions=');
+        $jsonPartEnd = strpos($response, '```', $jsonPartStart);
+
         
-//         $questions = [];
-//         foreach ($matches1 as $match) {
-//     $questionText = trim($match[1]);
+        // If the end of the JSON part is not found, use the end of the string
+        if ($jsonPartEnd === false) {
+            $jsonPartEnd = strlen($response);
+        }
 
-//     if ($questionText == "Pertanyaannya") {
-//         continue;
-//     }
+        $jsonPart = substr($response, $jsonPartStart, $jsonPartEnd - $jsonPartStart);
 
-//     $optionA = trim($match[2]);
-//     $optionB = trim($match[3]);
-//     $optionC = trim($match[4]);
-//     $optionD = trim($match[5]);
-//     $answer = trim($match[6]);
-//     $explanation = trim($match[7]);
-
-//     $questions[] = [
-//         'question' => $questionText,
-//         'answers' => [
-//             ['isright' => $answer == 'A' ? 'true' : 'false', 'description' => $optionA, 'explanation' => $answer == 'A' ? $explanation : ''],
-//             ['isright' => $answer == 'B' ? 'true' : 'false', 'description' => $optionB, 'explanation' => $answer == 'B' ? $explanation : ''],
-//             ['isright' => $answer == 'C' ? 'true' : 'false', 'description' => $optionC, 'explanation' => $answer == 'C' ? $explanation : ''],
-//             ['isright' => $answer == 'D' ? 'true' : 'false', 'description' => $optionD, 'explanation' => $answer == 'D' ? $explanation : '']
-//         ]
-//     ];
-// }
-
-// foreach ($matches2 as $match) {
-//     $questionText = trim($match[1]);
-
-//     $optionA = trim($match[2]);
-//     $optionB = trim($match[3]);
-//     $optionC = trim($match[4]);
-//     $optionD = trim($match[5]);
-//     $answer = trim($match[6]);
-//     $explanation = trim($match[7]);
-
-//     $questions[] = [
-//         'question' => $questionText,
-//         'answers' => [
-//             ['isright' => $answer == 'A' ? 'true' : 'false', 'description' => $optionA, 'explanation' => $answer == 'A' ? $explanation : ''],
-//             ['isright' => $answer == 'B' ? 'true' : 'false', 'description' => $optionB, 'explanation' => $answer == 'B' ? $explanation : ''],
-//             ['isright' => $answer == 'C' ? 'true' : 'false', 'description' => $optionC, 'explanation' => $answer == 'C' ? $explanation : ''],
-//             ['isright' => $answer == 'D' ? 'true' : 'false', 'description' => $optionD, 'explanation' => $answer == 'D' ? $explanation : '']
-//         ]
-//     ];
-// }
+        // // Debug: Print the JSON part
+        // echo '<pre>';
+        // echo 'Extracted JSON part:<br>';
+        // echo htmlspecialchars($jsonPart);
+        // echo '</pre>';
         
-//         $dummyData = [
-//             'module_name' => $module_name,
-//             'subject_name' => $subject_name,
-//             'subject_description' => $subject_description,
-//             'questions' => $questions,
-//         ];
 
-        echo '<div class="center-card"><div class="card" style="background-color:#F6F6F6"><div class="card-body">';
-        echo '<pre>' . json_encode($data['response'], JSON_PRETTY_PRINT) . '</pre>';
-        echo '</br';
+        // Decode the JSON part
+        $data = json_decode($jsonPart, true);
+
+        if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+            die('JSON decode error: ' . json_last_error_msg());
+        }
+
+        $questions = [];
+
+        foreach ($data as $questionData) {
+            $question = [
+                'question' => $questionData['question'],
+                'answers' => []
+            ];
+        
+            if (isset($questionData['option']) && is_array($questionData['option'])) {
+                foreach ($questionData['option'] as $option) {
+                    $question['answers'][] = [
+                        'isright' => $option == $questionData['answer'] ? 'true' : 'false',
+                        'description' => $option,
+                        'explanation' => $option == $questionData['answer'] ? $questionData['explanation'] : ''
+                    ];
+                }
+            } else {
+                // Handle essay question
+                $question['answers'][] = [
+                    'isright' => 'true',  // Essay questions typically have one correct answer
+                    'description' => $questionData['answer'],
+                    'explanation' => $questionData['explanation']
+                ];
+            }
+        
+            $questions[] = $question;
+        }
+
+        $dummyData = [
+            'module_name' => $module_name,
+            'subject_name' => $subject_name,
+            'subject_description' => $subject_description,
+            'questions' => $questions
+        ];
+
+
+        // echo json_encode($dummyData, JSON_PRETTY_PRINT);
+
+        // echo '<div class="center-card"><div class="card" style="background-color:#F6F6F6"><div class="card-body">';
+        // echo '<pre>' . json_encode($data, JSON_PRETTY_PRINT) . '</pre>';
+        // echo '</br';
         // // echo '<pre>' . json_encode($dummyData, JSON_PRETTY_PRINT) . '</pre>';
 
-        // echo '</div></div></div>';
+        echo '</div></div></div>';
 
-        // echo '<style>
-        // .container {
-        //     display: flex;
-        //     flex-wrap: wrap;
-        //     justify-content: space-between;
-        // }
-        // .card {
-        //     background-color: #F6F6F6;
-        //     padding: 20px;
-        //     border: 1px solid #000000;
-        //     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        //     width: 30%;
-        //     margin-bottom: 20px;
-        //     box-sizing: border-box;
-        // }
-        // </style>';
+        echo '<style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .card {
+            background-color: #F6F6F6;
+            padding: 20px;
+            border: 1px solid #000000;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 30%;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        </style>';
 
-        // echo '<form method="POST" action="process.php">';
-        // echo '<div class="container">';
-        // foreach ($dummyData['questions'] as $qIndex => $question) {
-        //     echo '<div class="card">';
-        //     echo '<label for="question' . $qIndex . '"><strong>' . htmlspecialchars($question['question'], ENT_QUOTES, 'UTF-8') . '</strong></label>';
-        //     echo '<div style="padding-left: 20px;">';
-        //     foreach ($question['answers'] as $aIndex => $answer) {
-        //         $answerText = htmlspecialchars($answer['description'], ENT_QUOTES, 'UTF-8');
-        //         $isCorrect = htmlspecialchars($answer['isright'], ENT_QUOTES, 'UTF-8');
-        //         $label = chr(97 + $aIndex); // 'a' is ASCII 97
-        //         if ($isCorrect == 'true') {
-        //             echo '<p><b>' . $label . '. ' . $answerText . '</b> (True)</p>';
-        //         } else {
-        //             echo '<p>' . $label . '. ' . $answerText . '</p>';
-        //         }
-        //     }
-        //     // Add a difficulty selector for each question
-        //     echo '<label for="difficulty' . $qIndex . '">Difficulty: </label>';
-        //     echo '<select id="difficulty' . $qIndex . '" name="difficulty[' . $qIndex . ']">';
-        //     for ($i = 1; $i <= 10; $i++) {
-        //         echo '<option value="' . $i . '">' . $i . '</option>';
-        //     }
-        //     echo '</select>';
-        //     echo '<input type="checkbox" id="question' . $qIndex . '" name="selected_questions[]" value="' . $qIndex . '" style="margin-left: 10px;">';
-        //     echo '<label for="question' . $qIndex . '" style="margin-left: 5px;">Import this question</label>';
+        echo '<form method="POST" action="process.php">';
+        echo '<div class="container">';
+        foreach ($dummyData['questions'] as $qIndex => $question) {
+            echo '<div class="card">';
+            echo '<label for="question' . $qIndex . '"><strong>' . htmlspecialchars($question['question'], ENT_QUOTES, 'UTF-8') . '</strong></label>';
+            echo '<div style="padding-left: 20px;">';
+            foreach ($question['answers'] as $aIndex => $answer) {
+                $answerText = htmlspecialchars($answer['description'], ENT_QUOTES, 'UTF-8');
+                $isCorrect = htmlspecialchars($answer['isright'], ENT_QUOTES, 'UTF-8');
+
+                // Check if there is more than one answer
+                if (count($question['answers']) > 1) {
+                    $label = chr(97 + $aIndex); // 'a' is ASCII 97
+                    $labelText = $label . '. ';
+                } else {
+                    // If there is only one answer, don't display the label
+                    $labelText = '';
+                }
+
+                if ($isCorrect == 'true') {
+                    echo '<p><mark>' . $labelText . $answerText . '</mark></p>';
+                } else {
+                    echo '<p>' . $labelText . $answerText . '</p>';
+                }
+            }
+            // Add a difficulty selector for each question
+            echo '<label for="difficulty' . $qIndex . '">Difficulty: </label>';
+            echo '<select id="difficulty' . $qIndex . '" name="difficulty[' . $qIndex . ']">';
+            for ($i = 1; $i <= 10; $i++) {
+                echo '<option value="' . $i . '">' . $i . '</option>';
+            }
+            echo '</select>';
+            echo '<input type="checkbox" id="question' . $qIndex . '" name="selected_questions[]" value="' . $qIndex . '" style="margin-left: 10px;">';
+            echo '<label for="question' . $qIndex . '" style="margin-left: 5px;">Import this question</label>';
             
-        //     // Include hidden inputs for each question and answer details
-        //     echo '<input type="hidden" name="questions[' . $qIndex . '][question]" value="' . htmlspecialchars($question['question'], ENT_QUOTES, 'UTF-8') . '">';
-        //     foreach ($question['answers'] as $aIndex => $answer) {
-        //         echo '<input type="hidden" name="questions[' . $qIndex . '][answers][' . $aIndex . '][description]" value="' . htmlspecialchars($answer['description'], ENT_QUOTES, 'UTF-8') . '">';
-        //         echo '<input type="hidden" name="questions[' . $qIndex . '][answers][' . $aIndex . '][isright]" value="' . htmlspecialchars($answer['isright'], ENT_QUOTES, 'UTF-8') . '">';
-        //         echo '<input type="hidden" name="questions[' . $qIndex . '][answers][' . $aIndex . '][explanation]" value="' . htmlspecialchars($answer['explanation'], ENT_QUOTES, 'UTF-8') . '">';
-        //     }
-        //     echo '</div>';
-        //     echo '</div>';
-        // }
-        // echo '</div>'; // Close container
-        // echo '<input type="hidden" name="answer_type" value="' . htmlspecialchars($answer_type, ENT_QUOTES, 'UTF-8') . '">';
-        // echo '<input type="hidden" name="text" value="' . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') . '">';
-        // echo '<input type="hidden" name="module" value="' . htmlspecialchars($module_name, ENT_QUOTES, 'UTF-8') . '">';
-        // echo '<input type="hidden" name="subject" value="' . htmlspecialchars($subject_name, ENT_QUOTES, 'UTF-8') . '">';
-        // echo '<input type="hidden" name="subject_desc" value="' . htmlspecialchars($subject_description, ENT_QUOTES, 'UTF-8') . '">';
-        // echo '<input type="submit" value="Submit">';
-        // echo '</form>';
+            // Include hidden inputs for each question and answer details
+            echo '<input type="hidden" name="questions[' . $qIndex . '][question]" value="' . htmlspecialchars($question['question'], ENT_QUOTES, 'UTF-8') . '">';
+            foreach ($question['answers'] as $aIndex => $answer) {
+                echo '<input type="hidden" name="questions[' . $qIndex . '][answers][' . $aIndex . '][description]" value="' . htmlspecialchars($answer['description'], ENT_QUOTES, 'UTF-8') . '">';
+                echo '<input type="hidden" name="questions[' . $qIndex . '][answers][' . $aIndex . '][isright]" value="' . htmlspecialchars($answer['isright'], ENT_QUOTES, 'UTF-8') . '">';
+                echo '<input type="hidden" name="questions[' . $qIndex . '][answers][' . $aIndex . '][explanation]" value="' . htmlspecialchars($answer['explanation'], ENT_QUOTES, 'UTF-8') . '">';
+            }
+            echo '</div>';
+            echo '</div>';
+        }
+        echo '</div>'; // Close container
+        echo '<input type="hidden" name="answer_type" value="' . htmlspecialchars($answer_type, ENT_QUOTES, 'UTF-8') . '">';
+        echo '<input type="hidden" name="text" value="' . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') . '">';
+        echo '<input type="hidden" name="module" value="' . htmlspecialchars($module_name, ENT_QUOTES, 'UTF-8') . '">';
+        echo '<input type="hidden" name="subject" value="' . htmlspecialchars($subject_name, ENT_QUOTES, 'UTF-8') . '">';
+        echo '<input type="hidden" name="subject_desc" value="' . htmlspecialchars($subject_description, ENT_QUOTES, 'UTF-8') . '">';
+        echo '<input type="submit" value="Submit">';
+        echo '</form>';
 
     } else {
         echo '<div class="center-card"><div class="card" style="background-color:#F6F6F6"><div class="card-body">';

@@ -298,7 +298,7 @@ function F_getCSRFToken()
 session_set_save_handler('F_session_open', 'F_session_close', 'F_session_read', 'F_session_write', 'F_session_destroy', 'F_session_gc');
 
 // start user session
-if (isset($_COOKIE['PHPSESSID'])) {
+if (session_status() === PHP_SESSION_NONE) {
     // cookie takes precedence
     $_REQUEST['PHPSESSID'] = $_COOKIE['PHPSESSID'];
 }
