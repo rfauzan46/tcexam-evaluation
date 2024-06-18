@@ -77,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_FILES['file'])) {
         if ($_FILES['file']['error'] === UPLOAD_ERR_OK) {
+        echo '<p>Debug: File uploaded successfully</p>';
         // File is uploaded, handle file upload
         $file = $_FILES['file'];
 
@@ -109,6 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo '</div></div></div>';
             curl_close($ch);
             exit;
+        } else {
+            echo '<p>Debug: cURL request successful</p>';
         }
 
         // Close cURL session for ask_rag request
