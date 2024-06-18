@@ -241,18 +241,18 @@ while ($m = F_db_fetch_array($r)) {
                     <input class="form-check-input" type="radio" name="answer_type" id="single_answer" value="single" required>
                     <label class="form-check-label" for="single_answer">Single Answer</label>
                 </div>
-                <div class="form-check">
+                <!-- <div class="form-check">
                     <input class="form-check-input" type="radio" name="answer_type" id="multiple_answers" value="multiple" required>
                     <label class="form-check-label" for="multiple_answers">Multiple Answers</label>
-                </div>
+                </div> -->
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="answer_type" id="free_answer" value="text" required>
                     <label class="form-check-label" for="free_answer">Free Answer</label>
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="answer_type" id="ordering_answers" value="ordering_answers" required>
+                <!-- <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer_type" id="ordering_answers" value="ordering" required>
                     <label class="form-check-label" for="ordering_answers">Ordering Answers</label>
-                </div>
+                </div> -->
                 <div class="form-group d-flex">
                     <!-- <div class="mr-3">
                         <label for="difficulty" class="form-label">Difficulty:</label><br>
@@ -271,12 +271,12 @@ while ($m = F_db_fetch_array($r)) {
                     </div>
                 </div>
             </div>
-            <br/>
+            <!-- <br/>
                 <button id="showTextareaBtn">Add more context (optional)</button>
                 <div class="mb-3" id="textareaWrapper" style="display: none;">
                     <label for="text" class="form-label">Input Text:</label>
                     <textarea class="form-control" name="text" id="text" rows="5"></textarea>
-                </div>
+                </div> -->
             </div>
             <br/>
             <button type="submit" id="submitBtn" style="padding: 5px 10px; font-size: 1.25em;">Generate!</button>
@@ -295,19 +295,19 @@ while ($m = F_db_fetch_array($r)) {
         document.getElementById('uploadForm').submit();
     }
 
-    document.getElementById('showTextareaBtn').addEventListener('click', function(event) {
-        var textareaWrapper = document.getElementById('textareaWrapper');
-        var textarea = document.getElementById('text');
+    // document.getElementById('showTextareaBtn').addEventListener('click', function(event) {
+    //     var textareaWrapper = document.getElementById('textareaWrapper');
+    //     var textarea = document.getElementById('text');
 
-        // Toggle visibility of textarea wrapper
-        if (textareaWrapper.style.display === 'none') {
-            textareaWrapper.style.display = 'block';
-            textarea.focus(); // Optionally focus on the textarea when shown
-        } else {
-            textareaWrapper.style.display = 'none';
-        }
-        event.preventDefault();
-    });
+    //     // Toggle visibility of textarea wrapper
+    //     if (textareaWrapper.style.display === 'none') {
+    //         textareaWrapper.style.display = 'block';
+    //         textarea.focus(); // Optionally focus on the textarea when shown
+    //     } else {
+    //         textareaWrapper.style.display = 'none';
+    //     }
+    //     event.preventDefault();
+    // });
 </script>
 </body>
 </html>

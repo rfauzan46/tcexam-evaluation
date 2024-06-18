@@ -35,7 +35,18 @@ while ($m = F_db_fetch_array($r)) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $answer_type = $_POST['answer_type'];
-    $text = $_POST['text'];
+    if ($answer_type === 'single') {
+        $answer_type_display = 'Single Answer';
+    } else if ($answer_type === 'multiple') {
+        $answer_type_display = 'Multiple Answers';
+    } else if ($answer_type === 'text') {
+        $answer_type_display = 'Free Answer';
+    } else if ($answer_type === 'ordering') {
+        $answer_type_display = "Ordering Answers";
+    }
+    
+
+    // $text = $_POST['text'];
     $selected_module_id = $_POST['subject_module_id'];
     $module_name = '';
     foreach ($modules as $module) {
@@ -57,11 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $language = $_POST['language'];
 
-    echo "<p>Answer Type: " . htmlspecialchars($answer_type, ENT_QUOTES, 'UTF-8') . "</p>";
-    echo "<p>Text: " . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') . "</p>";
+    echo "<p>Answer Type: " . htmlspecialchars($answer_type_display, ENT_QUOTES, 'UTF-8') . "</p>";
+    // echo "<p>Text: " . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') . "</p>";
     echo "<p>Module: " . htmlspecialchars($module_name, ENT_QUOTES, 'UTF-8') . "</p>";
     echo "<p>Subject: " . htmlspecialchars($subject_name, ENT_QUOTES, 'UTF-8') . "</p>";
-    echo "<p>Subject: " . htmlspecialchars($subject_description, ENT_QUOTES, 'UTF-8') . "</p>";
+    // echo "<p>Subject Description: " . htmlspecialchars($subject_description, ENT_QUOTES, 'UTF-8') . "</p>";
     echo "<p>Language: " . htmlspecialchars($language, ENT_QUOTES, 'UTF-8') . "</p>";
 
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
