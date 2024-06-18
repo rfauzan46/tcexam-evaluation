@@ -4,7 +4,7 @@ $request_body = file_get_contents('php://input');
 $data = json_decode($request_body, true);
 
 // Prepare data to be sent to /ask_rag
-$ask_rag_api_url = 'http://34.105.76.80:20000/ask_rag';
+$ask_rag_api_url = 'localhost:20000/ask_rag';
 
 // Adjust the query_data structure to match the required format
 $query_data = [
