@@ -75,7 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // echo "<p>Subject Description: " . htmlspecialchars($subject_description, ENT_QUOTES, 'UTF-8') . "</p>";
     echo "<p>Language: " . htmlspecialchars($language, ENT_QUOTES, 'UTF-8') . "</p>";
 
-    if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+    if (isset($_FILES['file'])) {
+        if ($_FILES['file']['error'] === UPLOAD_ERR_OK) {
         // File is uploaded, handle file upload
         $file = $_FILES['file'];
 
@@ -83,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $queryData = [
             'question_type' => $answer_type,
             'language' => $language,
-            'extra_instruction' => $text,
+            // 'extra_instruction' => $text,
             'subject' => $subject_name,
             'file' => new CURLFile($file['tmp_name'], $file['type'], $file['name'])
         ];
@@ -260,10 +261,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo '<input type="hidden" name="subject_desc" value="' . htmlspecialchars($subject_description, ENT_QUOTES, 'UTF-8') . '">';
         echo '<input type="submit" value="Submit">';
         echo '</form>';
-
+        } else {
+            switch ($_FILES['file']['error']) {
+                case UPLOAD_ERR_INI_SIZE:
+                    echo "<p>Error: The uploaded file exceeds the upload_max_filesize directive in php.ini.</p>";
+                    break;
+                case UPLOAD_ERR_FORM_SIZE:
+                    echo "<p>Error: The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.</p>";
+                    break;
+                case UPLOAD_ERR_PARTIAL:
+                    echo "<p>Error: The uploaded file was only partially uploaded.</p>";
+                    break;
+                case UPLOAD_ERR_NO_FILE:
+                    echo "<p>Error: No file was uploaded.</p>";
+                    break;
+                case UPLOAD_ERR_NO_TMP_DIR:
+                    echo "<p>Error: Missing a temporary folder.</p>";
+                    break;
+                case UPLOAD_ERR_CANT_WRITE:
+                    echo "<p>Error: Failed to write file to disk.</p>";
+                    break;
+                case UPLOAD_ERR_EXTENSION:
+                    echo "<p>Error: A PHP extension stopped the file upload.</p>";
+                    break;
+                default:
+                    echo "<p>Error: Unknown upload error.</p>";
+                    break;
+            }
+        }
     } else {
         echo '<div class="center-card"><div class="card" style="background-color:#F6F6F6"><div class="card-body">';
-        echo '<p>Error: No file uploaded or file upload error occurred.</p>';
+        echo '<p>No file was uploaded or there was an error uploading the file.</p>';
         echo '</div></div></div>';
     }
 }
