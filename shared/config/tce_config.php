@@ -175,7 +175,7 @@ define('K_CHECK_SESSION_FINGERPRINT', true);
 /**
  * Cookie domain.
  */
-define('K_COOKIE_DOMAIN', '');
+define('K_COOKIE_DOMAIN', 'http://34.105.76.80');
 
 /**
  * Cookie path.
@@ -185,7 +185,7 @@ define('K_COOKIE_PATH', '/');
 /**
  * If true use secure cookies.
  */
-define('K_COOKIE_SECURE', true);
+define('K_COOKIE_SECURE', false);
 
 /**
  * When true the cookie will be made accessible only through the HTTP protocol.
