@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Initialize cURL session for ask_rag request
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'http://localhost:19645/ask_rag');
+        curl_setopt($ch, CURLOPT_URL, 'http://localhost:20000/ask_rag');
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $queryData);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);
