@@ -299,8 +299,10 @@ session_set_save_handler('F_session_open', 'F_session_close', 'F_session_read', 
 
 // start user session
 if (session_status() === PHP_SESSION_NONE) {
-    // cookie takes precedence
-    $_REQUEST['PHPSESSID'] = $_COOKIE['PHPSESSID'];
+    if (isset($_COOKIE['PHPSESSID'])) {
+        // cookie takes precedence
+        $_REQUEST['PHPSESSID'] = $_COOKIE['PHPSESSID'];
+    }
 }
 
 if (isset($_REQUEST['PHPSESSID'])) {
