@@ -38,7 +38,7 @@ while ($m = F_db_fetch_array($r)) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_questions'])) {
     $answer_type = $_POST['answer_type'];
-    $text = $_POST['text'];
+    // $text = $_POST['text'];
     $selected_module_id = $_POST['module'];
     $selected_subject_id = $_POST['subject'];
     $selected_subject_desc = $_POST['subject_desc'];
