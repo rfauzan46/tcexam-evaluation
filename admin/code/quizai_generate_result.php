@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($ch === false) {
             die('Failed to initialize cURL session');
         }
-        curl_setopt($ch, CURLOPT_URL, 'http://34.19.31.77:20000/ask_rag');
+        curl_setopt($ch, CURLOPT_URL, 'http://127.0.0.1:20000/ask_rag');
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $queryData);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);
@@ -207,7 +207,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .container {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
         }
         .card {
             background-color: #F6F6F6;
