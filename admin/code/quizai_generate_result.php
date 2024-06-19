@@ -127,9 +127,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         curl_close($ch);
 
         // Debug: Print the raw response
-        echo '<pre>';
-        echo htmlspecialchars($response);
-        echo '</pre>';
+        // echo '<pre>';
+        // echo htmlspecialchars($response);
+        // echo '</pre>';
 
         // Find the JSON part in the raw response
         $startPos = strpos($response, 'AI:');
@@ -145,10 +145,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $jsonPart = substr($response, $jsonPartStart, $jsonPartEnd - $jsonPartStart);
 
         // // Debug: Print the JSON part
-        echo '<pre>';
-        echo 'Extracted JSON part:<br>';
-        echo htmlspecialchars($jsonPart);
-        echo '</pre>';
+        // echo '<pre>';
+        // echo 'Extracted JSON part:<br>';
+        // echo htmlspecialchars($jsonPart);
+        // echo '</pre>';
         
 
         // Decode the JSON part
