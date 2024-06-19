@@ -269,7 +269,7 @@ while ($m = F_db_fetch_array($r)) {
                             <option value="english">English</option>
                         </select>
                     </div>
-                    <div class="mb-3" id="textareaWrapper" style="display: none;">
+                    <div>
                         <label for="text" class="form-label">Topic <em>(e.g., Machine Learning, Ancient Rome)</em>:</label>
                         <textarea class="form-control" name="text" id="text" rows="5" required></textarea>
                     </div>
