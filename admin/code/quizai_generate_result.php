@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_FILES['file'])) {
         if ($_FILES['file']['error'] === UPLOAD_ERR_OK) {
-        echo '<p>Debug: File uploaded successfully</p>';
+        // echo '<p>Debug: File uploaded successfully</p>';
         // File is uploaded, handle file upload
         $file = $_FILES['file'];
 
@@ -104,9 +104,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60); // Set connection timeout to 60 seconds
 
         // Debug: Print cURL options
-        echo '<pre>';
-        print_r(curl_getinfo($ch));
-        echo '</pre>';
+        // echo '<pre>';
+        // print_r(curl_getinfo($ch));
+        // echo '</pre>';
 
         // Execute cURL request for ask_rag
         $response = curl_exec($ch);
@@ -118,17 +118,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo '</div></div></div>';
             curl_close($ch);
             exit;
-        } else {
-            echo '<p>Debug: cURL request successful</p>';
-        }
+        } 
+        // else {
+        //     echo '<p>Debug: cURL request successful</p>';
+        // }
 
         // Close cURL session for ask_rag request
         curl_close($ch);
 
         // Debug: Print the raw response
-        echo '<pre>';
-        echo htmlspecialchars($response);
-        echo '</pre>';
+        // echo '<pre>';
+        // echo htmlspecialchars($response);
+        // echo '</pre>';
 
         // Find the JSON part in the raw response
         $startPos = strpos($response, 'AI:');
@@ -266,7 +267,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         echo '</div>'; // Close container
         echo '<input type="hidden" name="answer_type" value="' . htmlspecialchars($answer_type, ENT_QUOTES, 'UTF-8') . '">';
-        echo '<input type="hidden" name="text" value="' . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') . '">';
+        // echo '<input type="hidden" name="text" value="' . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') . '">';
         echo '<input type="hidden" name="module" value="' . htmlspecialchars($module_name, ENT_QUOTES, 'UTF-8') . '">';
         echo '<input type="hidden" name="subject" value="' . htmlspecialchars($subject_name, ENT_QUOTES, 'UTF-8') . '">';
         echo '<input type="hidden" name="subject_desc" value="' . htmlspecialchars($subject_description, ENT_QUOTES, 'UTF-8') . '">';
