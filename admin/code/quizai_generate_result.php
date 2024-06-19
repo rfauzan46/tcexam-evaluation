@@ -266,7 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         echo '</div>'; // Close container
         echo '<input type="hidden" name="answer_type" value="' . htmlspecialchars($answer_type, ENT_QUOTES, 'UTF-8') . '">';
-        // echo '<input type="hidden" name="text" value="' . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') . '">';
+        echo '<input type="hidden" name="text" value="' . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') . '">';
         echo '<input type="hidden" name="module" value="' . htmlspecialchars($module_name, ENT_QUOTES, 'UTF-8') . '">';
         echo '<input type="hidden" name="subject" value="' . htmlspecialchars($subject_name, ENT_QUOTES, 'UTF-8') . '">';
         echo '<input type="hidden" name="subject_desc" value="' . htmlspecialchars($subject_description, ENT_QUOTES, 'UTF-8') . '">';
