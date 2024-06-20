@@ -204,7 +204,7 @@ while ($m = F_db_fetch_array($r)) {
 <body>
 <div class="card">
     <div class="card-body">
-        <form id="uploadForm" enctype="multipart/form-data" method="POST" action="quizai_generate_result.php">
+        <form id="uploadForm" enctype="multipart/form-data" method="POST" action="quizai_generate_result_temp.php">
             <input type="hidden" name="form_action" id="form_action" value="generate">
 
             <div class="mb-3">
@@ -294,7 +294,7 @@ while ($m = F_db_fetch_array($r)) {
         if (action === 'change_module' || action === 'change_subject') {
             document.getElementById('uploadForm').action = ''; // No specific action for module/subject change
         } else {
-            document.getElementById('uploadForm').action = 'quizai_generate_result.php'; // Default action
+            document.getElementById('uploadForm').action = 'quizai_generate_result_temp.php'; // Default action
         }
         document.getElementById('uploadForm').submit();
     }
