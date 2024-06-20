@@ -433,7 +433,7 @@ class XMLQuestionImporter
         if (K_DATABASE_TYPE == 'ORACLE') {
             $sql .= "dbms_lob.instr(question_description,'" . $this->level_data['question']['question_description'] . "',1,1)>0";
         } elseif (K_DATABASE_TYPE === 'MYSQL' && K_MYSQL_QA_BIN_UNIQUITY) {
-            $sql .= "question_description='" . $this->level_data['question']['question_description'] . "' COLLATE utf8_bin";
+            $sql .= "question_description='" . $this->level_data['question']['question_description'] . "' COLLATE utf8mb4_unicode_ci";
         } else {
             $sql .= "question_description='" . $this->level_data['question']['question_description'] . "'";
         }
@@ -541,7 +541,7 @@ class XMLQuestionImporter
         if (K_DATABASE_TYPE == 'ORACLE') {
             $sql .= "dbms_lob.instr(answer_description, '" . $this->level_data['answer']['answer_description'] . "',1,1)>0";
         } elseif (K_DATABASE_TYPE === 'MYSQL' && K_MYSQL_QA_BIN_UNIQUITY) {
-            $sql .= "answer_description='" . $this->level_data['answer']['answer_description'] . "' COLLATE utf8_bin";
+            $sql .= "answer_description='" . $this->level_data['answer']['answer_description'] . "' COLLATE utf8mb4_unicode_ci";
         } else {
             $sql .= "answer_description='" . $this->level_data['answer']['answer_description'] . "'";
         }
