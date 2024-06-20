@@ -243,6 +243,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     echo '<p>' . $labelText . $answerText . '</p>';
                 }
+
+                if ($explanation) {
+                    echo '<p><b>Explanation: ' . $explanation . '</b></p>';
+                }
             }
             // Add a difficulty selector for each question
             echo '<label for="difficulty' . $qIndex . '">Difficulty: </label>';
@@ -267,6 +271,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo '</div>'; // Close container
         echo '<input type="hidden" name="answer_type" value="' . htmlspecialchars($answer_type, ENT_QUOTES, 'UTF-8') . '">';
         echo '<input type="hidden" name="text" value="' . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') . '">';
+        echo '<input type="hidden" name="module_id" value="' . htmlspecialchars($selected_module_id, ENT_QUOTES, 'UTF-8') . '">';
+        echo '<input type="hidden" name="subject_id" value="' . htmlspecialchars($selected_subject_id, ENT_QUOTES, 'UTF-8') . '">';
         echo '<input type="hidden" name="module" value="' . htmlspecialchars($module_name, ENT_QUOTES, 'UTF-8') . '">';
         echo '<input type="hidden" name="subject" value="' . htmlspecialchars($subject_name, ENT_QUOTES, 'UTF-8') . '">';
         echo '<input type="hidden" name="subject_desc" value="' . htmlspecialchars($subject_description, ENT_QUOTES, 'UTF-8') . '">';

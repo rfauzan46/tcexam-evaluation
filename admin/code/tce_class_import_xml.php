@@ -161,9 +161,9 @@ class XMLQuestionImporter
     public function __destruct()
     {
         // Check if xmlfile exists before attempting to delete
-        if ($this->xmlfile && file_exists($this->xmlfile)) {
+        if ($this->xmlFile && file_exists($this->xmlFile)) {
             // Delete uploaded file
-            @unlink($this->xmlfile);
+            @unlink($this->xmlFile);
         }
     }
     

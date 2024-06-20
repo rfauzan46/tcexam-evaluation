@@ -39,8 +39,10 @@ while ($m = F_db_fetch_array($r)) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_questions'])) {
     $answer_type = $_POST['answer_type'];
     $text = $_POST['text'];
-    $selected_module_id = $_POST['module'];
-    $selected_subject_id = $_POST['subject'];
+    $selected_module_id = $_POST['module_id'];
+    $selected_subject_id = $_POST['subject_id'];
+    $selected_module_name = $_POST['module'];
+    $selected_subject_name = $_POST['subject'];
     $selected_subject_desc = $_POST['subject_desc'];
     $difficulties = $_POST['difficulty'];
     $questions = $_POST['questions'];
@@ -72,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_questions'])
     $body->appendChild($module);
 
     // Create and append the module name element
-    $moduleName = $doc->createElement('name', htmlspecialchars($selected_module_id, ENT_QUOTES, 'UTF-8'));
+    $moduleName = $doc->createElement('name', htmlspecialchars($selected_module_name, ENT_QUOTES, 'UTF-8'));
     $module->appendChild($moduleName);
 
     // Create and append the enabled element for module
@@ -84,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_questions'])
     $module->appendChild($subject);
 
     // Create and append the subject name element
-    $subjectName = $doc->createElement('name', htmlspecialchars($selected_subject_id, ENT_QUOTES, 'UTF-8'));
+    $subjectName = $doc->createElement('name', htmlspecialchars($selected_subject_name, ENT_QUOTES, 'UTF-8'));
     $subject->appendChild($subjectName);
 
     // Create and append the description element for subject
@@ -192,19 +194,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_questions'])
     // Create an instance of XMLQuestionImporter and pass the XML file path
     $xmlImporter = new XMLQuestionImporter($xmlString);
 
-    if (!class_exists('XMLQuestionImporter')) {
-        die('XMLQuestionImporter class not found.');
-    }
-
-    try {
-        $xmlImporter = new XMLQuestionImporter($xmlString);
-        if ($xmlImporter) {
-            F_print_error('MESSAGE', $l['m_importing_complete']);
-        } else {
-            echo 'XMLQuestionImporter could not be instantiated.';
-        }
-    } catch (Exception $e) {
-        echo 'Error instantiating XMLQuestionImporter: ',  $e->getMessage(), "\n";
+    if ($xmlImporter) {
+        F_print_error('MESSAGE', $l['m_importing_complete']);
+        echo '<br/>';
+        echo '<p>To manage the generated questions, go to "Question Management"</p>';
+        echo '<a href="tce_edit_question.php?subject_module_id=' . $selected_module_id . '&amp;question_subject_id=' . $selected_subject_id . '" title="' . $l['t_questions_editor'] . '" class="xmlbutton">' . $l['t_questions_editor'] . ' &gt;</a>';
+        echo '<p>To make test with the generated questions, go to click the "Make Test"</p>';
+        echo '<a href="tce_edit_test.php" title="Make test" class="xmlbutton"> Make Test &gt;</a>';
     }
 } else {
     echo 'No questions were selected.';
