@@ -474,30 +474,30 @@ class XMLQuestionImporter
 
         // insert question
         $sql = 'INSERT INTO ' . K_TABLE_QUESTIONS . ' (
-			question_subject_id,
-			question_description,
-			question_explanation,
-			question_type,
-			question_difficulty,
-			question_enabled,
-			question_position,
-			question_timer,
-			question_fullscreen,
-			question_inline_answers,
-			question_auto_next
-			) VALUES (
-			' . $this->level_data['subject']['subject_id'] . ',
-			\'' . $this->level_data['question']['question_description'] . '\',
-			' . F_empty_to_null($this->level_data['question']['question_explanation']) . ',
-			\'' . $this->qtype[$this->level_data['question']['question_type']] . '\',
-			\'' . $this->level_data['question']['question_difficulty'] . '\',
-			\'' . $this->boolval[$this->level_data['question']['question_enabled']] . '\',
-			' . F_zero_to_null((int) $this->level_data['question']['question_position']) . ',
-			\'' . $this->level_data['question']['question_timer'] . '\',
-			\'' . $this->boolval[$this->level_data['question']['question_fullscreen']] . '\',
-			\'' . $this->boolval[$this->level_data['question']['question_inline_answers']] . '\',
-			\'' . $this->boolval[$this->level_data['question']['question_auto_next']] . '\'
-			)';
+            question_subject_id,
+            question_description,
+            question_explanation,
+            question_type,
+            question_difficulty,
+            question_enabled,
+            question_position,
+            question_timer,
+            question_fullscreen,
+            question_inline_answers,
+            question_auto_next
+            ) VALUES (
+            ' . $this->level_data['subject']['subject_id'] . ',
+            \'' . $this->level_data['question']['question_description'] . '\',
+            ' . F_empty_to_null($this->level_data['question']['question_explanation']) . ',
+            \'' . $this->qtype[$this->level_data['question']['question_type']] . '\',
+            \'' . $this->level_data['question']['question_difficulty'] . '\',
+            \'' . $this->boolval[$this->level_data['question']['question_enabled']] . '\',
+            ' . F_zero_to_null((int) $this->level_data['question']['question_position']) . ',
+            ' . F_empty_to_null((int) $this->level_data['question']['question_timer']) . ', // Ensure question_timer is inserted as an integer or NULL
+            \'' . $this->boolval[$this->level_data['question']['question_fullscreen']] . '\',
+            \'' . $this->boolval[$this->level_data['question']['question_inline_answers']] . '\',
+            \'' . $this->boolval[$this->level_data['question']['question_auto_next']] . '\'
+            )';
         if (! $r = F_db_query($sql, $db)) {
             F_display_db_error(false);
         } else {
