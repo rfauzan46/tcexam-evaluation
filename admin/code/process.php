@@ -192,8 +192,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_questions'])
     // Create an instance of XMLQuestionImporter and pass the XML file path
     $xmlImporter = new XMLQuestionImporter($xmlString);
 
-    if ($xmlImporter) {
-        F_print_error('MESSAGE', $l['m_importing_complete']);
+    if (!class_exists('XMLQuestionImporter')) {
+        die('XMLQuestionImporter class not found.');
+    }
+
+    try {
+        $xmlImporter = new XMLQuestionImporter($xmlString);
+        if ($xmlImporter) {
+            F_print_error('MESSAGE', $l['m_importing_complete']);
+        } else {
+            echo 'XMLQuestionImporter could not be instantiated.';
+        }
+    } catch (Exception $e) {
+        echo 'Error instantiating XMLQuestionImporter: ',  $e->getMessage(), "\n";
     }
 } else {
     echo 'No questions were selected.';
