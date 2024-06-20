@@ -49,7 +49,7 @@ function F_db_connect($host = 'localhost', $port = '3306', $username = 'root', $
     }
 
     // set the correct charset encoding
-    mysqli_query($db, "SET NAMES 'utf8mb4' COLLATE 'utf8mb4_bin'");
+    mysqli_query($db, "SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci'");
     mysqli_query($db, "SET CHARACTER SET 'utf8mb4'");
     return $db;
 }
