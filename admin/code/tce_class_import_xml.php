@@ -160,10 +160,13 @@ class XMLQuestionImporter
     
     public function __destruct()
     {
-        // delete uploaded file
-        @unlink($this->xmlfile);
+        // Check if xmlfile exists before attempting to delete
+        if ($this->xmlfile && file_exists($this->xmlfile)) {
+            // Delete uploaded file
+            @unlink($this->xmlfile);
+        }
     }
-
+    
     /**
      * Sets the start element handler function for the XML parser parser.start_element_handler.
      * @param $parser (resource) The first parameter, parser, is a reference to the XML parser calling the handler.
