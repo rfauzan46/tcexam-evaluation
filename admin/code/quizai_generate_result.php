@@ -145,10 +145,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $jsonPart = substr($response, $jsonPartStart, $jsonPartEnd - $jsonPartStart);
 
         // Debug: Print the JSON part
-        echo '<pre>';
-        echo 'Extracted JSON part:<br>';
-        echo htmlspecialchars($jsonPart);
-        echo '</pre>';
+        // echo '<pre>';
+        // echo 'Extracted JSON part:<br>';
+        // echo htmlspecialchars($jsonPart);
+        // echo '</pre>';
         
 
         // Decode the JSON part
@@ -228,6 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             foreach ($question['answers'] as $aIndex => $answer) {
                 $answerText = htmlspecialchars($answer['description'], ENT_QUOTES, 'UTF-8');
                 $isCorrect = htmlspecialchars($answer['isright'], ENT_QUOTES, 'UTF-8');
+                $explanation = htmlspecialchars($answer['explanation'], ENT_QUOTES, 'UTF-8');
 
                 // Check if there is more than one answer
                 if (count($question['answers']) > 1) {
