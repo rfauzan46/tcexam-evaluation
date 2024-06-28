@@ -144,11 +144,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $jsonPart = substr($response, $jsonPartStart, $jsonPartEnd - $jsonPartStart);
 
-        // // Debug: Print the JSON part
-        // echo '<pre>';
-        // echo 'Extracted JSON part:<br>';
-        // echo htmlspecialchars($jsonPart);
-        // echo '</pre>';
+        // Debug: Print the JSON part
+        echo '<pre>';
+        echo 'Extracted JSON part:<br>';
+        echo htmlspecialchars($jsonPart);
+        echo '</pre>';
         
 
         // Decode the JSON part
