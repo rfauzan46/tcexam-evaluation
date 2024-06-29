@@ -184,10 +184,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_questions'])
     $doc->loadXML($xmlString);
 
     // Get the formatted XML string
-    $formattedXml = $doc->saveXML();
+    // $formattedXml = $doc->saveXML();
 
     // Display the formatted XML content
-    echo '<pre>' . htmlspecialchars($formattedXml) . '</pre>';
+    // echo '<pre>' . htmlspecialchars($formattedXml) . '</pre>';
 
     require_once('../code/tce_class_import_xml.php');
 
