@@ -245,7 +245,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     echo '<p>' . $labelText . $answerText . '</p>';
                 }
 
+            }
+
+            foreach ($question['answers'] as $aIndex => $answer) {
+                $explanation = htmlspecialchars($answer['explanation'], ENT_QUOTES, 'UTF-8');
                 if ($explanation) {
+                    echo '<hr>';
                     echo '<p><b>Explanation: ' . $explanation . '</b></p>';
                 }
             }
