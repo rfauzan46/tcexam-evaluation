@@ -28,6 +28,18 @@ require_once('../../shared/code/tce_authorization.php');
 require_once('../../shared/code/tce_functions_otp.php');
 require_once('../../shared/code/tce_functions_form.php');
 
+// CORS headers
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+// Handle preflight request
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    // Send the necessary headers and exit
+    header('HTTP/1.1 200 OK');
+    exit;
+}
+
 header('Content-Type: application/json');
 
 // Check if user registration is enabled
