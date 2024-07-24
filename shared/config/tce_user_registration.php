@@ -37,7 +37,7 @@ define('K_USRREG_ENABLED', true);
 /**
  * If true requires email confirmation.
  */
-define('K_USRREG_EMAIL_CONFIRM', true);
+define('K_USRREG_EMAIL_CONFIRM', false);
 
 /**
  * Default user group ID for registered user.

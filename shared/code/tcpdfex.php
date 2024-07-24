@@ -879,12 +879,12 @@ class TCPDFEX extends TCPDF
                 }
 
                 // end multiple answers
-                if (strlen($m['testlog_comment']) > 0) {
-                    // teacher / supervisor comment
-                    $this->SetTextColor(255, 0, 0);
-                    $this->writeHTMLCell(0, $this->tce_data_cell_height, (PDF_MARGIN_LEFT + (2 * $tce_data_cell_width_third)), $this->GetY(), F_decode_tcecode($m['testlog_comment']), 'LRTB', 1);
-                    $this->SetTextColor(0, 0, 0);
-                }
+                // if (strlen($m['testlog_comment']) > 0) {
+                //     // teacher / supervisor comment
+                //     $this->SetTextColor(255, 0, 0);
+                //     $this->writeHTMLCell(0, $this->tce_data_cell_height, (PDF_MARGIN_LEFT + (2 * $tce_data_cell_width_third)), $this->GetY(), F_decode_tcecode($m['testlog_comment']), 'LRTB', 1);
+                //     $this->SetTextColor(0, 0, 0);
+                // }
 
                 $this->Ln($this->tce_data_cell_height);
                 ++$itemcount;
